@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { generateAgents, cityLookup } from "../utils/generator.js";
+import { generateAgents } from "../utils/generator.js";
 
 export default function Dashboard() {
   const [status, setStatus] = useState("Idle — ready.");
@@ -13,6 +14,7 @@ export default function Dashboard() {
   const [heatMode, setHeatMode] = useState(false);
 
   const username = localStorage.getItem("tsd_user") || "Agent";
+  const navigate = useNavigate();
 
   useEffect(() => {
     const m = L.map("map", {
@@ -48,7 +50,7 @@ export default function Dashboard() {
 
     await typeStatus(`Scanning directory for "${query}"...`);
 
-    const result = generateAgents(query, 12);
+    const result = await generateAgents(query, 12); // async now
     setAgents([]);
 
     // clear old map layers
@@ -81,28 +83,31 @@ export default function Dashboard() {
       // auto zoom to cluster
       map.fitBounds(coords.map((c) => [c[0], c[1]]), { padding: [50, 50] });
 
-      // draw tracer lines to London hub
-      const hub = cityLookup["London"];
-      if (hub) {
-        coords.forEach(([lat, lng]) => {
-          const line = L.polyline([[hub.lat, hub.lng], [lat, lng]], {
-            color: "#00ffe0",
-            weight: 2,
-            opacity: 0.6,
-            dashArray: "6 8",
-          }).addTo(map);
-          newMarkers.push(line);
-        });
-      }
+      // tracer lines to London hub (style flourish)
+      const hub = { lat: 51.5072, lng: -0.1276 }; // London coords
+      coords.forEach(([lat, lng]) => {
+        const line = L.polyline([[hub.lat, hub.lng], [lat, lng]], {
+          color: "#00ffe0",
+          weight: 2,
+          opacity: 0.6,
+          dashArray: "6 8",
+        }).addTo(map);
+        newMarkers.push(line);
+      });
     }
 
     if (heatMode && coords.length && map) {
-      const heat = L.heatLayer(coords, {
-        radius: 25,
-        blur: 15,
-        gradient: { 0.4: "#0ff", 0.65: "#f0f", 1: "#fff" },
-      }).addTo(map);
-      setHeatLayer(heat);
+      // load heatmap dynamically
+      if (!L.heatLayer) {
+        console.error("Leaflet.heat not loaded. Did you include leaflet.heat.js?");
+      } else {
+        const heat = L.heatLayer(coords, {
+          radius: 25,
+          blur: 15,
+          gradient: { 0.4: "#0ff", 0.65: "#f0f", 1: "#fff" },
+        }).addTo(map);
+        setHeatLayer(heat);
+      }
     }
 
     await typeStatus("Search complete.");
@@ -173,7 +178,13 @@ export default function Dashboard() {
               <tbody>
                 {agents.map((a, i) => (
                   <tr key={i}>
-                    <td className="codename">{a.codename}</td>
+                    <td
+                      className="codename"
+                      style={{ cursor: "pointer", color: "#0ff", textDecoration: "underline" }}
+                      onClick={() => navigate("/profile", { state: a })}
+                    >
+                      {a.codename}
+                    </td>
                     <td>{a.fullName}</td>
                     <td>{a.profession}</td>
                     <td>{a.nationality}</td>

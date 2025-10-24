@@ -59,12 +59,24 @@ function generateCodename() {
   );
 }
 
-// --- FALLBACK CITIES ---
+// --- FALLBACK CITIES (from local cities.json) ---
 let allCities = [];
 async function loadCities() {
   if (allCities.length) return allCities;
   const res = await fetch("/cities.json");
-  allCities = await res.json();
+  const raw = await res.json();
+
+  // Normalize GeoNames format -> expected format
+  allCities = raw.map(c => ({
+    id: c.id,
+    name: c.name,
+    country: c.country,
+    admin1: c.admin1,
+    lat: parseFloat(c.lat),
+    lng: parseFloat(c.lon),   // map "lon" to "lng"
+    pop: parseInt(c.pop || 0)
+  }));
+
   return allCities;
 }
 
@@ -98,39 +110,41 @@ function fuzzyMatchCity(cities, query) {
 export async function generateAgents(query, count = 10) {
   const lowerQuery = query.toLowerCase();
 
-  // try API first
+  // Try API first
   let cityData = await fetchCityFromAPI(query);
 
-  // fallback to local cities.json
+  // Fallback to local cities.json
   if (!cityData) {
     const cities = await loadCities();
     const match = fuzzyMatchCity(cities, query);
     if (match) {
       cityData = {
         name: match.name,
-        lat: parseFloat(match.lat),
-        lng: parseFloat(match.lng),
+        lat: match.lat,
+        lng: match.lng,
         country: match.country,
       };
     }
   }
 
-  // if still no city, random from local
+  // If still nothing, pick random from local dataset
   if (!cityData) {
     const cities = await loadCities();
     const rand = faker.helpers.arrayElement(cities);
     cityData = {
       name: rand.name,
-      lat: parseFloat(rand.lat),
-      lng: parseFloat(rand.lng),
+      lat: rand.lat,
+      lng: rand.lng,
       country: rand.country,
     };
   }
 
-  // generate agents
+  // Generate agents around city
   const results = [];
   for (let i = 0; i < count; i++) {
     let prof = faker.helpers.arrayElement(professions);
+
+    // keyword bias
     if (lowerQuery.includes("weapon")) prof = "Weapons Consultant";
     if (lowerQuery.includes("body")) prof = "Body Remover";
     if (lowerQuery.includes("clean")) prof = "Clean-Up Coordinator";
