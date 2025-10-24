@@ -138,7 +138,7 @@ export default function Dashboard() {
 
       <div style={{ flex: 1, display: "flex" }}>
         {/* left panel */}
-        <div style={{ width: "35%", padding: "14px", overflowY: "auto" }}>
+        <div style={{ width: "300px", flex: 'none', padding: "14px", overflowY: "auto" }}>
           <div className="panel">
             <input
               type="text"
