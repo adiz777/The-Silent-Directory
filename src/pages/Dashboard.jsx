@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { generateAgents } from "../utils/generator.js";
+import { generateAgents } from "../generator.js";
 
 export default function Dashboard() {
   const [status, setStatus] = useState("Idle — ready.");
