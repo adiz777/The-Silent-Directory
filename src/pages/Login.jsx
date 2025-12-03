@@ -8,8 +8,7 @@ export default function Login() {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    // Save username and accept anything, then move to dashboard
-    localStorage.setItem("tsd_user", username || "Agent");
+    // Accept anything, move to dashboard
     navigate("/dashboard");
   };
 
