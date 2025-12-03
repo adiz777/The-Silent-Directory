@@ -1,3 +1,10 @@
+/* Theme variables */
+:root {
+  --accent-color: #0ff;
+  --bg-color: #000;
+  --border-color: #0ff;
+}
+
 /* ===== Global Reset ===== */
 * {
   margin: 0;
@@ -8,11 +15,10 @@
 html, body, #root {
   height: 100%;
   width: 100%;
-  background: #000;
-  color: #0ff;
+  background: var(--bg-color, #000);
+  color: var(--accent-color, #0ff);
   font-family: "Courier New", monospace;
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden;
 }
 
 /* ===== Glitch Effect (for headings) ===== */
@@ -144,18 +150,4 @@ html, body, #root {
 #map {
   height: 100%;
   width: 100%;
-}
-
-
-/* ===== Responsive tweaks ===== */
-@media (max-width: 768px) {
-  .overlay-card {
-    width: 90% !important;
-    left: 50% !important;
-    transform: translateX(-50%);
-  }
-
-  .agents-table-wrapper {
-    max-height: 45vh;
-  }
 }
