@@ -1,0 +1,66 @@
+{
+  "houses": [
+    {
+      "id": "house-wolves",
+      "name": "House of Wolves",
+      "motto": "We arrive after the noise.",
+      "primaryRegions": ["Europe", "Asia"],
+      "knownFor": "Clean extractions, long memories.",
+      "risk": "High"
+    },
+    {
+      "id": "house-iron",
+      "name": "House of Iron",
+      "motto": "Weight decides everything.",
+      "primaryRegions": ["Middle East", "Africa"],
+      "knownFor": "Heavy enforcement, financial backing.",
+      "risk": "High"
+    },
+    {
+      "id": "house-glass",
+      "name": "House of Glass",
+      "motto": "Nothing is ever fully opaque.",
+      "primaryRegions": ["Europe"],
+      "knownFor": "Information brokering, quiet leverage.",
+      "risk": "Medium"
+    },
+    {
+      "id": "house-choir",
+      "name": "The Ashen Choir",
+      "motto": "We sing after the fire.",
+      "primaryRegions": ["South America", "Southern Europe"],
+      "knownFor": "Cleanup, disappearances, ritual precision.",
+      "risk": "High"
+    },
+    {
+      "id": "house-lost",
+      "name": "The Lost Chapter",
+      "motto": "Forgotten, not gone.",
+      "primaryRegions": ["North America", "Oceania"],
+      "knownFor": "Old alliances, unclear loyalties.",
+      "risk": "Unknown"
+    },
+    {
+      "id": "house-mirrors",
+      "name": "House of Mirrors",
+      "motto": "Nothing reflects the same twice.",
+      "primaryRegions": ["Asia", "Mediterranean"],
+      "knownFor": "False flags, double work, triple agents.",
+      "risk": "Extreme"
+    }
+  ],
+  "diplomacy": [
+    { "houseA": "house-wolves", "houseB": "house-iron", "relation": "Tense" },
+    { "houseA": "house-wolves", "houseB": "house-glass", "relation": "Pragmatic" },
+    { "houseA": "house-wolves", "houseB": "house-choir", "relation": "Hostile" },
+    { "houseA": "house-iron", "houseB": "house-glass", "relation": "Cooperative" },
+    { "houseA": "house-iron", "houseB": "house-choir", "relation": "Fragile" },
+    { "houseA": "house-iron", "houseB": "house-lost", "relation": "Unknown" },
+    { "houseA": "house-glass", "houseB": "house-choir", "relation": "Cold" },
+    { "houseA": "house-glass", "houseB": "house-lost", "relation": "Curious" },
+    { "houseA": "house-glass", "houseB": "house-mirrors", "relation": "Dangerous" },
+    { "houseA": "house-choir", "houseB": "house-lost", "relation": "Strained" },
+    { "houseA": "house-choir", "houseB": "house-mirrors", "relation": "Hostile" },
+    { "houseA": "house-lost", "houseB": "house-mirrors", "relation": "Unclear" }
+  ]
+}

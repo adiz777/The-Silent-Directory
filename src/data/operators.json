@@ -1,0 +1,102 @@
+[
+  {
+    "id": "op-onyx-47",
+    "codename": "ONYX-47",
+    "status": "Active",
+    "primaryCity": "city-london",
+    "house": "house-wolves",
+    "specialty": ["Extraction", "Counter-surveillance"],
+    "lastSeen": "London Dockside",
+    "risk": "High"
+  },
+  {
+    "id": "op-glass-ember",
+    "codename": "GLASS-EMBER",
+    "status": "Active",
+    "primaryCity": "city-paris",
+    "house": "house-glass",
+    "specialty": ["Intelligence", "Negotiation"],
+    "lastSeen": "Montmartre Quarter",
+    "risk": "Medium"
+  },
+  {
+    "id": "op-silent-harbor",
+    "codename": "SILENT HARBOR",
+    "status": "Unknown",
+    "primaryCity": "city-casablanca",
+    "house": "house-choir",
+    "specialty": ["Disposal", "Cover-ups"],
+    "lastSeen": "Casablanca Medina",
+    "risk": "High"
+  },
+  {
+    "id": "op-needle",
+    "codename": "NEEDLE",
+    "status": "Active",
+    "primaryCity": "city-hongkong",
+    "house": "house-mirrors",
+    "specialty": ["Assassination", "False flags"],
+    "lastSeen": "Harbourline rooftops",
+    "risk": "Extreme"
+  },
+  {
+    "id": "op-archive-ink",
+    "codename": "ARCHIVE INK",
+    "status": "Active",
+    "primaryCity": "city-newyork",
+    "house": "house-lost",
+    "specialty": ["Records", "Quiet transport"],
+    "lastSeen": "Unlisted reading room",
+    "risk": "Medium"
+  },
+  {
+    "id": "op-brass-veil",
+    "codename": "BRASS VEIL",
+    "status": "Retired",
+    "primaryCity": "city-rome",
+    "house": "house-iron",
+    "specialty": ["Enforcement", "Debt collection"],
+    "lastSeen": "Unknown",
+    "risk": "Low"
+  },
+  {
+    "id": "op-echo-seven",
+    "codename": "ECHO-7",
+    "status": "Active",
+    "primaryCity": "city-osaka",
+    "house": "house-wolves",
+    "specialty": ["Reconnaissance", "Signals"],
+    "lastSeen": "Osaka Skyline district",
+    "risk": "High"
+  },
+  {
+    "id": "op-ghost-lantern",
+    "codename": "GHOST LANTERN",
+    "status": "Missing",
+    "primaryCity": "city-bangkok",
+    "house": "house-mirrors",
+    "specialty": ["Smuggling", "Route design"],
+    "lastSeen": "Riverside docks",
+    "risk": "Extreme"
+  },
+  {
+    "id": "op-sable-choir",
+    "codename": "SABLE CHOIR",
+    "status": "Active",
+    "primaryCity": "city-rio",
+    "house": "house-choir",
+    "specialty": ["Ritual work", "Group coordination"],
+    "lastSeen": "Unmarked hillside",
+    "risk": "High"
+  },
+  {
+    "id": "op-lost-ink",
+    "codename": "LOST INK",
+    "status": "Unknown",
+    "primaryCity": "city-toronto",
+    "house": "house-lost",
+    "specialty": ["Paper trails", "Identity crafting"],
+    "lastSeen": "Conflicting reports",
+    "risk": "Unknown"
+  }
+]

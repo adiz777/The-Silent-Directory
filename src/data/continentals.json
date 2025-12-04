@@ -1,0 +1,182 @@
+[
+  {
+    "id": "cont-lon-01",
+    "branchName": "The Continental – London Dockside",
+    "cityId": "city-london",
+    "region": "Europe",
+    "status": "Active",
+    "discretion": "High",
+    "notes": "Preferred by operators who let the fog do the talking."
+  },
+  {
+    "id": "cont-nyc-01",
+    "branchName": "The Continental – New York Midtown",
+    "cityId": "city-newyork",
+    "region": "North America",
+    "status": "Active",
+    "discretion": "Extreme",
+    "notes": "Too many stories start and end here."
+  },
+  {
+    "id": "cont-rome-01",
+    "branchName": "The Continental – Rome Forum",
+    "cityId": "city-rome",
+    "region": "Europe",
+    "status": "Active",
+    "discretion": "High",
+    "notes": "Old laws enforced in very modern ways."
+  },
+  {
+    "id": "cont-osaka-01",
+    "branchName": "The Continental – Osaka Skyline",
+    "cityId": "city-osaka",
+    "region": "Asia",
+    "status": "Active",
+    "discretion": "Extreme",
+    "notes": "Neon on the outside, obsidian on the inside."
+  },
+  {
+    "id": "cont-dubai-01",
+    "branchName": "The Continental – Dubai Spire",
+    "cityId": "city-dubai",
+    "region": "Middle East",
+    "status": "Active",
+    "discretion": "High",
+    "notes": "Some rooms are paid in cash. Others in concessions."
+  },
+  {
+    "id": "cont-istanbul-01",
+    "branchName": "The Continental – Istanbul Golden Horn",
+    "cityId": "city-istanbul",
+    "region": "Middle East",
+    "status": "Active",
+    "discretion": "High",
+    "notes": "Guests arrive under one name and leave under another."
+  },
+  {
+    "id": "cont-berlin-01",
+    "branchName": "The Continental – Berlin Kreuz",
+    "cityId": "city-berlin",
+    "region": "Europe",
+    "status": "Active",
+    "discretion": "Standard",
+    "notes": "Walls thinner than they look, contracts thicker."
+  },
+  {
+    "id": "cont-paris-01",
+    "branchName": "The Continental – Paris Montmartre",
+    "cityId": "city-paris",
+    "region": "Europe",
+    "status": "Active",
+    "discretion": "High",
+    "notes": "Soft music in the lobby, hard silence upstairs."
+  },
+  {
+    "id": "cont-hk-01",
+    "branchName": "The Continental – Hong Kong Harbourline",
+    "cityId": "city-hongkong",
+    "region": "Asia",
+    "status": "Active",
+    "discretion": "Extreme",
+    "notes": "Cameras watch the city. Different cameras watch the guests."
+  },
+  {
+    "id": "cont-mumbai-01",
+    "branchName": "The Continental – Mumbai Gateway",
+    "cityId": "city-mumbai",
+    "region": "Asia",
+    "status": "Active",
+    "discretion": "High",
+    "notes": "Noise is cover; the lobby is always full and never crowded."
+  },
+  {
+    "id": "cont-casa-01",
+    "branchName": "The Continental – Casablanca Medina",
+    "cityId": "city-casablanca",
+    "region": "Africa",
+    "status": "Active",
+    "discretion": "High",
+    "notes": "Every corridor is a negotiation."
+  },
+  {
+    "id": "cont-tor-01",
+    "branchName": "The Continental – Toronto Lakeside",
+    "cityId": "city-toronto",
+    "region": "North America",
+    "status": "Active",
+    "discretion": "Standard",
+    "notes": "The maple leaves aren't the only things that fall quietly."
+  },
+  {
+    "id": "cont-mexico-01",
+    "branchName": "The Continental – Mexico City Zócalo",
+    "cityId": "city-mexicocity",
+    "region": "North America",
+    "status": "Active",
+    "discretion": "High",
+    "notes": "Fireworks are the best cover for noise."
+  },
+  {
+    "id": "cont-bangkok-01",
+    "branchName": "The Continental – Bangkok Riverside",
+    "cityId": "city-bangkok",
+    "region": "Asia",
+    "status": "Active",
+    "discretion": "High",
+    "notes": "Lights never go off, only change colour."
+  },
+  {
+    "id": "cont-singapore-01",
+    "branchName": "The Continental – Singapore Marina",
+    "cityId": "city-singapore",
+    "region": "Asia",
+    "status": "Active",
+    "discretion": "Extreme",
+    "notes": "Nothing is out of place, including the guests."
+  },
+  {
+    "id": "cont-nyc-02",
+    "branchName": "The Continental – New York Old Quarter",
+    "cityId": "city-newyork",
+    "region": "North America",
+    "status": "Quietly Closed",
+    "discretion": "High",
+    "notes": "Officially closed. Lights say otherwise."
+  },
+  {
+    "id": "cont-lon-02",
+    "branchName": "The Continental – London High Street",
+    "cityId": "city-london",
+    "region": "Europe",
+    "status": "Contested",
+    "discretion": "High",
+    "notes": "Neutral ground being negotiated, not guaranteed."
+  },
+  {
+    "id": "cont-rome-02",
+    "branchName": "The Continental – Rome Heights",
+    "cityId": "city-rome",
+    "region": "Europe",
+    "status": "Active",
+    "discretion": "Standard",
+    "notes": "For guests who prefer fewer echoes."
+  },
+  {
+    "id": "cont-dubai-02",
+    "branchName": "The Continental – Dubai Sands",
+    "cityId": "city-dubai",
+    "region": "Middle East",
+    "status": "Under Renovation",
+    "discretion": "High",
+    "notes": "Renovation is a generous word for what happened."
+  },
+  {
+    "id": "cont-hk-02",
+    "branchName": "The Continental – Hong Kong Peak",
+    "cityId": "city-hongkong",
+    "region": "Asia",
+    "status": "Active",
+    "discretion": "Extreme",
+    "notes": "You can see the whole harbour. It can see you back."
+  }
+]

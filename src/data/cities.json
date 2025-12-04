@@ -1,0 +1,202 @@
+[
+  {
+    "id": "city-london",
+    "name": "London",
+    "country": "United Kingdom",
+    "region": "Europe",
+    "heat": 68,
+    "factions": ["house-wolves", "house-glass"],
+    "hasContinental": true,
+    "notes": "Old money, new guns. Activity rarely drops below a simmer."
+  },
+  {
+    "id": "city-newyork",
+    "name": "New York",
+    "country": "United States",
+    "region": "North America",
+    "heat": 75,
+    "factions": ["house-iron", "house-lost"],
+    "hasContinental": true,
+    "notes": "Birthplace of too many grudges to count."
+  },
+  {
+    "id": "city-rome",
+    "name": "Rome",
+    "country": "Italy",
+    "region": "Europe",
+    "heat": 61,
+    "factions": ["house-glass", "house-choir"],
+    "hasContinental": true,
+    "notes": "Every stone remembers something it shouldn't."
+  },
+  {
+    "id": "city-osaka",
+    "name": "Osaka",
+    "country": "Japan",
+    "region": "Asia",
+    "heat": 72,
+    "factions": ["house-wolves", "house-mirrors"],
+    "hasContinental": true,
+    "notes": "Neon hides the bloodstains. Most of them."
+  },
+  {
+    "id": "city-dubai",
+    "name": "Dubai",
+    "country": "United Arab Emirates",
+    "region": "Middle East",
+    "heat": 79,
+    "factions": ["house-iron", "house-choir"],
+    "hasContinental": true,
+    "notes": "Money moves faster than bullets here."
+  },
+  {
+    "id": "city-istanbul",
+    "name": "Istanbul",
+    "country": "Türkiye",
+    "region": "Middle East",
+    "heat": 66,
+    "factions": ["house-lost", "house-mirrors"],
+    "hasContinental": true,
+    "notes": "Crossroads of trade, faith, and quiet disappearances."
+  },
+  {
+    "id": "city-berlin",
+    "name": "Berlin",
+    "country": "Germany",
+    "region": "Europe",
+    "heat": 63,
+    "factions": ["house-iron"],
+    "hasContinental": true,
+    "notes": "Old walls, new borders. None of them official."
+  },
+  {
+    "id": "city-paris",
+    "name": "Paris",
+    "country": "France",
+    "region": "Europe",
+    "heat": 59,
+    "factions": ["house-glass"],
+    "hasContinental": true,
+    "notes": "Soft light, hard exits."
+  },
+  {
+    "id": "city-hongkong",
+    "name": "Hong Kong",
+    "country": "China",
+    "region": "Asia",
+    "heat": 77,
+    "factions": ["house-wolves", "house-mirrors"],
+    "hasContinental": true,
+    "notes": "Too many cameras, never enough witnesses."
+  },
+  {
+    "id": "city-mumbai",
+    "name": "Mumbai",
+    "country": "India",
+    "region": "Asia",
+    "heat": 70,
+    "factions": ["house-choir", "house-lost"],
+    "hasContinental": true,
+    "notes": "Noise is the best cover. Everyone knows and no one speaks."
+  },
+  {
+    "id": "city-casablanca",
+    "name": "Casablanca",
+    "country": "Morocco",
+    "region": "Africa",
+    "heat": 74,
+    "factions": ["house-wolves"],
+    "hasContinental": true,
+    "notes": "Desert winds carry secrets further than radio waves."
+  },
+  {
+    "id": "city-johannesburg",
+    "name": "Johannesburg",
+    "country": "South Africa",
+    "region": "Africa",
+    "heat": 58,
+    "factions": ["house-iron"],
+    "hasContinental": false,
+    "notes": "No Continental, but business happens anyway."
+  },
+  {
+    "id": "city-toronto",
+    "name": "Toronto",
+    "country": "Canada",
+    "region": "North America",
+    "heat": 52,
+    "factions": ["house-lost"],
+    "hasContinental": true,
+    "notes": "Polite on the surface, clinical underneath."
+  },
+  {
+    "id": "city-rio",
+    "name": "Rio de Janeiro",
+    "country": "Brazil",
+    "region": "South America",
+    "heat": 69,
+    "factions": ["house-choir"],
+    "hasContinental": false,
+    "notes": "Carnival hides more than costume changes."
+  },
+  {
+    "id": "city-bangkok",
+    "name": "Bangkok",
+    "country": "Thailand",
+    "region": "Asia",
+    "heat": 73,
+    "factions": ["house-mirrors"],
+    "hasContinental": true,
+    "notes": "If you get lost here, it's because someone wanted you to."
+  },
+  {
+    "id": "city-singapore",
+    "name": "Singapore",
+    "country": "Singapore",
+    "region": "Asia",
+    "heat": 64,
+    "factions": ["house-iron"],
+    "hasContinental": true,
+    "notes": "Clean streets, dirty ledgers."
+  },
+  {
+    "id": "city-lisbon",
+    "name": "Lisbon",
+    "country": "Portugal",
+    "region": "Europe",
+    "heat": 47,
+    "factions": ["house-glass"],
+    "hasContinental": false,
+    "notes": "Too quiet for some, perfect for others."
+  },
+  {
+    "id": "city-mexicocity",
+    "name": "Mexico City",
+    "country": "Mexico",
+    "region": "North America",
+    "heat": 71,
+    "factions": ["house-wolves", "house-choir"],
+    "hasContinental": true,
+    "notes": "Life is cheap. Contracts aren't."
+  },
+  {
+    "id": "city-sydney",
+    "name": "Sydney",
+    "country": "Australia",
+    "region": "Oceania",
+    "heat": 50,
+    "factions": ["house-lost"],
+    "hasContinental": false,
+    "notes": "Far away, never out of reach."
+  },
+  {
+    "id": "city-athens",
+    "name": "Athens",
+    "country": "Greece",
+    "region": "Europe",
+    "heat": 55,
+    "factions": ["house-choir", "house-mirrors"],
+    "hasContinental": false,
+    "notes": "Empires fall, ledgers remain."
+  }
+]

@@ -1,0 +1,72 @@
+[
+  {
+    "id": "anom-heat-surge",
+    "type": "heat",
+    "severity": "High",
+    "description": "Sudden spike in contract, comms, and operator movement in a single city.",
+    "effects": ["increaseCityHeat", "triggerWhisper", "flagCouncilReview"]
+  },
+  {
+    "id": "anom-signal-blackout",
+    "type": "comms",
+    "severity": "High",
+    "description": "Communications from a region drop below baseline without explanation.",
+    "effects": ["triggerWhisper", "markCityUnreliable"]
+  },
+  {
+    "id": "anom-duplicate-alias",
+    "type": "identity",
+    "severity": "Extreme",
+    "description": "Same alias detected in two distant cities within an impossible time window.",
+    "effects": ["flagCouncilReview", "spawnOperatorShadow"]
+  },
+  {
+    "id": "anom-coin-mismatch",
+    "type": "finance",
+    "severity": "Medium",
+    "description": "Registered markers and coins no longer match ledger totals.",
+    "effects": ["alertCreditNetwork", "triggerWhisper"]
+  },
+  {
+    "id": "anom-safehouse-empty",
+    "type": "safehouse",
+    "severity": "Medium",
+    "description": "Safehouse gear inventory cleared with no formal closure.",
+    "effects": ["flagSafehouseCompromised", "triggerWhisper"]
+  },
+  {
+    "id": "anom-continental-rotation",
+    "type": "continental",
+    "severity": "Medium",
+    "description": "Staff rotation pattern at a Continental deviates from norms.",
+    "effects": ["triggerWhisper", "flagCouncilReview"]
+  },
+  {
+    "id": "anom-ghost-city",
+    "type": "city",
+    "severity": "Low",
+    "description": "City shows faint activity spikes despite being marked dormant.",
+    "effects": ["increaseCityHeatSlight", "triggerWhisper"]
+  },
+  {
+    "id": "anom-council-silence",
+    "type": "council",
+    "severity": "High",
+    "description": "A usually active Council seat registers no outbound resolutions.",
+    "effects": ["triggerWhisper", "delayResolutions"]
+  },
+  {
+    "id": "anom-route-collision",
+    "type": "routes",
+    "severity": "Medium",
+    "description": "Several operators appear to be routed through the same transit node.",
+    "effects": ["alertOperators", "increaseTransitRisk"]
+  },
+  {
+    "id": "anom-backdoor-attempt",
+    "type": "system",
+    "severity": "High",
+    "description": "Interaction pattern resembles an unauthorised attempt to map the Directory.",
+    "effects": ["triggerCompromiseWarning", "logSystemEvent"]
+  }
+]

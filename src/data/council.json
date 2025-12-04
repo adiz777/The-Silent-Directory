@@ -1,0 +1,110 @@
+[
+  {
+    "id": "council-falcon",
+    "codename": "THE FALCON",
+    "seatNumber": 1,
+    "regionFocus": ["Eurasia"],
+    "houseTies": ["house-iron"],
+    "reputation": "Strategic, patient, rarely speaks twice.",
+    "risk": "Extreme"
+  },
+  {
+    "id": "council-glasskeeper",
+    "codename": "THE GLASSKEEPER",
+    "seatNumber": 2,
+    "regionFocus": ["Western Europe"],
+    "houseTies": ["house-glass"],
+    "reputation": "Knows what everyone paid, and what it cost them.",
+    "risk": "High"
+  },
+  {
+    "id": "council-bluepriest",
+    "codename": "THE BLUE PRIEST",
+    "seatNumber": 3,
+    "regionFocus": ["South America"],
+    "houseTies": ["house-choir"],
+    "reputation": "Treats violence like liturgy.",
+    "risk": "High"
+  },
+  {
+    "id": "council-librarian",
+    "codename": "THE LIBRARIAN",
+    "seatNumber": 4,
+    "regionFocus": ["North America"],
+    "houseTies": ["house-lost"],
+    "reputation": "Keeps archives no one admits exist.",
+    "risk": "Unknown"
+  },
+  {
+    "id": "council-cartographer",
+    "codename": "THE CARTOGRAPHER",
+    "seatNumber": 5,
+    "regionFocus": ["Africa", "Middle East"],
+    "houseTies": ["house-iron", "house-wolves"],
+    "reputation": "Redraws maps without ink.",
+    "risk": "High"
+  },
+  {
+    "id": "council-mirror",
+    "codename": "THE MIRROR",
+    "seatNumber": 6,
+    "regionFocus": ["Asia"],
+    "houseTies": ["house-mirrors"],
+    "reputation": "Every statement has at least two meanings.",
+    "risk": "Extreme"
+  },
+  {
+    "id": "council-warden",
+    "codename": "THE WARDEN",
+    "seatNumber": 7,
+    "regionFocus": ["Global Neutral Grounds"],
+    "houseTies": [],
+    "reputation": "Enforces rules no one has read recently.",
+    "risk": "High"
+  },
+  {
+    "id": "council-broker",
+    "codename": "THE BROKER",
+    "seatNumber": 8,
+    "regionFocus": ["Finance & Markers"],
+    "houseTies": ["house-glass", "house-iron"],
+    "reputation": "Sees every marker as leverage, not honour.",
+    "risk": "Extreme"
+  },
+  {
+    "id": "council-scribe",
+    "codename": "THE SCRIBE",
+    "seatNumber": 9,
+    "regionFocus": ["Records"],
+    "houseTies": ["house-lost"],
+    "reputation": "Writes nothing without three reasons.",
+    "risk": "Unknown"
+  },
+  {
+    "id": "council-gardener",
+    "codename": "THE GARDENER",
+    "seatNumber": 10,
+    "regionFocus": ["Safehouses"],
+    "houseTies": ["house-wolves"],
+    "reputation": "Treats safehouses like plants—some must be cut back.",
+    "risk": "High"
+  },
+  {
+    "id": "council-tempest",
+    "codename": "THE TEMPEST",
+    "seatNumber": 11,
+    "regionFocus": ["Crisis Response"],
+    "houseTies": ["house-choir", "house-mirrors"],
+    "reputation": "Arrives only when things are already broken.",
+    "risk": "Extreme"
+  },
+  {
+    "id": "council-absent",
+    "codename": "THE ABSENT",
+    "seatNumber": 12,
+    "regionFocus": ["Redacted"],
+    "houseTies": [],
+    "reputation": "Seat has not been officially filled in years. Unofficially is another matter.",
+    "risk": "Unknown"
+  }
+]

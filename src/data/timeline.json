@@ -1,0 +1,37 @@
+[
+  {
+    "id": "tl-000",
+    "ts": "2023-01-01T00:00:00Z",
+    "type": "system",
+    "summary": "Silent Directory core brought online.",
+    "details": "Initial seed of cities, houses, and Continentials registered."
+  },
+  {
+    "id": "tl-001",
+    "ts": "2023-03:12T06:22:00Z",
+    "type": "council",
+    "summary": "Council decree tightened neutral ground enforcement.",
+    "details": "Violence on Continental grounds explicitly sanctioned for review only."
+  },
+  {
+    "id": "tl-002",
+    "ts": "2023-06-07T18:40:00Z",
+    "type": "finance",
+    "summary": "Underworld Credit Network records unexplained surplus.",
+    "details": "Additional markers appear in the ledger with no issuing party."
+  },
+  {
+    "id": "tl-003",
+    "ts": "2023-09-19T02:11:00Z",
+    "type": "anomaly",
+    "summary": "Simultaneous operator sightings in three cities.",
+    "details": "Codename flagged as possible mirror or forgery."
+  },
+  {
+    "id": "tl-004",
+    "ts": "2024-02-01T09:15:00Z",
+    "type": "safehouse",
+    "summary": "Safehouse network quietly rebalanced.",
+    "details": "Several low-use safehouses retired, new ones seeded near transit hubs."
+  }
+]

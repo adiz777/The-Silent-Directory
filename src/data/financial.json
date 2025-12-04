@@ -1,0 +1,44 @@
+[
+  {
+    "id": "fin-001",
+    "type": "coin-flow",
+    "region": "Europe",
+    "summary": "Above-average coin movement between London and Rome.",
+    "risk": "Medium"
+  },
+  {
+    "id": "fin-002",
+    "type": "marker-issuance",
+    "region": "Asia",
+    "summary": "New blood marker registered without clear sponsor.",
+    "risk": "High"
+  },
+  {
+    "id": "fin-003",
+    "type": "ledger-mismatch",
+    "region": "Global",
+    "summary": "Total recorded markers exceed expected threshold.",
+    "risk": "High"
+  },
+  {
+    "id": "fin-004",
+    "type": "freeze",
+    "region": "Middle East",
+    "summary": "Coin flow temporarily frozen by Council decree.",
+    "risk": "Extreme"
+  },
+  {
+    "id": "fin-005",
+    "type": "wash",
+    "region": "South America",
+    "summary": "Suspected laundering using shell fronts linked to The Ashen Choir.",
+    "risk": "High"
+  },
+  {
+    "id": "fin-006",
+    "type": "ghost-fund",
+    "region": "North America",
+    "summary": "Account activity with no registered owner, still paying out.",
+    "risk": "Unknown"
+  }
+]

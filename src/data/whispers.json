@@ -1,0 +1,79 @@
+{
+  "whispers": [
+    {
+      "id": "wh-001",
+      "category": "general",
+      "text": "Unregistered presence detected near a Continental entrance."
+    },
+    {
+      "id": "wh-002",
+      "category": "general",
+      "text": "Marker exchange confirmed in an alley with no cameras."
+    },
+    {
+      "id": "wh-003",
+      "category": "finance",
+      "text": "Coin flow spike traced to a bank that doesn't exist on paper."
+    },
+    {
+      "id": "wh-004",
+      "category": "council",
+      "text": "A Council seat has not spoken publicly in three cycles. No one is comfortable with the silence."
+    },
+    {
+      "id": "wh-005",
+      "category": "safehouse",
+      "text": "Safehouse lights stayed on long after everyone supposedly left."
+    },
+    {
+      "id": "wh-006",
+      "category": "operators",
+      "text": "An operator thought retired checked in under a very familiar alias."
+    },
+    {
+      "id": "wh-007",
+      "category": "continental",
+      "text": "Continental staff in one city are being rotated unusually fast."
+    },
+    {
+      "id": "wh-008",
+      "category": "anomaly",
+      "text": "Three cities reported the same unknown codename on the same night."
+    },
+    {
+      "id": "wh-009",
+      "category": "cities",
+      "text": "A usually quiet port has registered more departures than arrivals."
+    },
+    {
+      "id": "wh-010",
+      "category": "council",
+      "text": "Someone requested old High Table minutes. No one will admit who."
+    },
+    {
+      "id": "wh-011",
+      "category": "finance",
+      "text": "Ledger values no longer match the number of coins in circulation."
+    },
+    {
+      "id": "wh-012",
+      "category": "danger",
+      "text": "If your alias appears twice on the same list, burn the list."
+    },
+    {
+      "id": "wh-013",
+      "category": "operators",
+      "text": "An adjudication that was never scheduled is already in motion."
+    },
+    {
+      "id": "wh-014",
+      "category": "safehouse",
+      "text": "Doors that used to open on the first knock now require three."
+    },
+    {
+      "id": "wh-015",
+      "category": "anomaly",
+      "text": "Heat maps show activity in a city the Directory considers dormant."
+    }
+  ]
+}
