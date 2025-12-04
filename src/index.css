@@ -1,3 +1,10 @@
+/* Theme variables */
+:root {
+  --accent-color: var(--accent-color, #0ff);
+  --bg-color: #000;
+  --border-color: var(--accent-color, #0ff);
+}
+
 /* ===== Global Reset ===== */
 * {
   margin: 0;
@@ -8,17 +15,16 @@
 html, body, #root {
   height: 100%;
   width: 100%;
-  background: #000;
-  color: #0ff;
+  background: var(--bg-color, #000);
+  color: var(--accent-color, #0ff);
   font-family: "Courier New", monospace;
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden;
 }
 
 /* ===== Glitch Effect (for headings) ===== */
 .glitch {
   position: relative;
-  color: #0ff;
+  color: var(--accent-color, #0ff);
   font-size: 1.8rem;
   text-transform: uppercase;
   letter-spacing: 2px;
@@ -40,7 +46,7 @@ html, body, #root {
 
 .glitch::after {
   animation: glitchBottom 1.5s infinite;
-  color: #0ff;
+  color: var(--accent-color, #0ff);
   clip: rect(0, 900px, 0, 0);
 }
 
@@ -79,7 +85,7 @@ html, body, #root {
 }
 
 .panel:hover {
-  border-color: #0ff;
+  border-color: var(--accent-color, #0ff);
   box-shadow: 0 0 8px #0ff;
 }
 
@@ -88,7 +94,7 @@ html, body, #root {
   padding: 10px;
   border: 1px solid #0ff;
   background: rgba(0, 0, 0, 0.7);
-  color: #0ff;
+  color: var(--accent-color, #0ff);
   cursor: pointer;
   border-radius: 6px;
   transition: 0.2s ease;
@@ -125,7 +131,7 @@ html, body, #root {
 }
 
 .table th {
-  color: #0ff;
+  color: var(--accent-color, #0ff);
   border-bottom: 2px solid #0ff;
 }
 
@@ -144,29 +150,4 @@ html, body, #root {
 #map {
   height: 100%;
   width: 100%;
-}
-
-
-/* ===== Responsive & Cinematic Tweaks ===== */
-@media (max-width: 768px) {
-  .btn {
-    font-size: 0.7rem;
-    padding: 6px 10px;
-  }
-
-  #map {
-    height: 100vh;
-    width: 100vw;
-  }
-}
-
-.overlay-card-enter {
-  opacity: 0;
-  transform: translateY(-10px);
-  transition: all 220ms ease-out;
-}
-
-.overlay-card-enter-active {
-  opacity: 1;
-  transform: translateY(0);
 }

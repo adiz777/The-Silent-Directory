@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useGameState } from "../hooks/useGameState.js";
-import CoinHud from "../components/CoinHud.jsx";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet.heat";
 import { generateAgents } from "../utlis/generator.js"; // fixed typo 'utlis' → 'utils'
 
 export default function Dashboard() {
-  const { coins, credibility, rank, award } = useGameState();
-
-    const [missionCard, setMissionCard] = useState(null);
-const [status, setStatus] = useState("Idle — ready.");
+  const [status, setStatus] = useState("Idle — ready.");
   const [query, setQuery] = useState("");
   const [agents, setAgents] = useState([]);
   const [map, setMap] = useState(null);
@@ -44,7 +39,6 @@ const [status, setStatus] = useState("Idle — ready.");
   const [filterAgency, setFilterAgency] = useState("ALL");
   const [filterNationality, setFilterNationality] = useState("ALL");
   const [excommunicado, setExcommunicado] = useState(false);
-  const [subTheme, setSubTheme] = useState("Noir");
 
 
   const classifiedProfiles = [
@@ -27162,12 +27156,6 @@ const [status, setStatus] = useState("Idle — ready.");
           fillColor: "#00f0ef",
           fillOpacity: 0.9,
         }).addTo(map);
-
-        marker.on("click", () => {
-          const city = result[i].city || "unknown city";
-          setStatus(`Regional dossier opened for ${city}.`);
-        });
-
         newMarkers.push(marker);
         coords.push([result[i].lat, result[i].lng, 0.8]);
       }
@@ -27225,16 +27213,7 @@ const [status, setStatus] = useState("Idle — ready.");
           top: 20,
           left: 20,
           width: "320px",
-          background:
-            subTheme === "Ember"
-              ? "rgba(30,0,0,0.9)"
-              : subTheme === "Glitch"
-              ? "rgba(5,0,30,0.9)"
-              : subTheme === "Cipher"
-              ? "rgba(0,20,25,0.9)"
-              : subTheme === "Stealth"
-              ? "rgba(0,10,10,0.9)"
-              : "rgba(0,0,0,0.8)",
+          background: "rgba(0,0,0,0.8)",
           border: "1px solid #0ff",
           borderRadius: "8px",
           padding: "15px",
@@ -27244,57 +27223,6 @@ const [status, setStatus] = useState("Idle — ready.");
         <h2 style={{ color: "#0ff", fontWeight: "bold", marginBottom: "6px" }}>
           Welcome {username} — THE SILENT DIRECTORY
         </h2>
-        <CoinHud coins={coins} credibility={credibility} rank={rank} />
-
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "10px" }}>
-          <button
-            className="btn ghost"
-            style={{ flex: "1 1 45%", fontSize: "11px" }}
-            onClick={() => navigate("/black-archive")}
-          >
-            Black Archive
-          </button>
-          <button
-            className="btn ghost"
-            style={{ flex: "1 1 45%", fontSize: "11px" }}
-            onClick={() => navigate("/generator")}
-          >
-            Dossier Gen
-          </button>
-          <button
-            className="btn ghost"
-            style={{ flex: "1 1 45%", fontSize: "11px" }}
-            onClick={() => navigate("/check-in")}
-          >
-            Continental
-          </button>
-          <button
-            className="btn ghost"
-            style={{ flex: "1 1 45%", fontSize: "11px" }}
-            onClick={() => navigate("/surveillance")}
-          >
-            Surveillance
-          </button>
-        
-        <div style={{ display: "flex", gap: "6px", marginBottom: "10px", fontSize: "10px" }}>
-          <span style={{ opacity: 0.7 }}>Subtheme:</span>
-          {["Noir", "Glitch", "Ember", "Cipher", "Stealth"].map((mode) => (
-            <button
-              key={mode}
-              className="btn ghost"
-              style={{
-                padding: "2px 6px",
-                fontSize: "10px",
-                borderColor: subTheme === mode ? "#0ff" : "#044",
-              }}
-              onClick={() => setSubTheme(mode)}
-            >
-              {mode}
-            </button>
-          ))}
-        </div>
-</div>
-
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "4px", marginBottom: "6px" }}>
           <button
             className="btn ghost"
@@ -27435,36 +27363,7 @@ const [status, setStatus] = useState("Idle — ready.");
             </div>
           </div>
 
-                    {/* Mission Generator */}
-          <div style={{ border: "1px solid #0ff", padding: "8px", borderRadius: "6px", background: "#020202", marginBottom: "8px" }}>
-            <div style={{ fontWeight: "bold", color: "#0ff", marginBottom: "4px" }}>Contract Fabricator</div>
-            <p style={{ fontSize: "11px", marginBottom: "4px" }}>
-              Spin up a synthetic contract. No one gets hurt. Your ledger still likes the initiative.
-            </p>
-            <button
-              className="btn"
-              style={{ width: "100%", fontSize: "11px", marginBottom: "6px" }}
-              onClick={() => {
-                const card = generateMissionCard();
-                setMissionCard(card);
-                award({ coins: 1, cred: 2 });
-              }}
-            >
-              Generate Mission
-            </button>
-            {missionCard && (
-              <div style={{ fontSize: "11px", borderTop: "1px solid #0ff", paddingTop: "4px", marginTop: "4px" }}>
-                <div><strong>ID:</strong> {missionCard.id}</div>
-                <div><strong>Type:</strong> {missionCard.type}</div>
-                <div><strong>Priority:</strong> {missionCard.priority}</div>
-                <div><strong>City:</strong> {missionCard.city}</div>
-                <div><strong>Complication:</strong> {missionCard.complication}</div>
-                <div><strong>Reward:</strong> {missionCard.reward}</div>
-              </div>
-            )}
-          </div>
-
-{/* Time-Locked & Cipher */}
+          {/* Time-Locked & Cipher */}
           <div style={{ border: "1px solid #0ff", padding: "8px", borderRadius: "6px" }}>
             <div style={{ fontWeight: "bold", color: "#0ff", marginBottom: "4px" }}>Midnight Protocol</div>
             {(() => {
@@ -27477,38 +27376,7 @@ const [status, setStatus] = useState("Idle — ready.");
                   </div>
                 );
               }
-            
-  function generateMissionCard() {
-    const types = ["Extraction", "Pursuit", "Recon", "Retrieval", "Erasure"];
-    const priorities = ["Low", "Moderate", "High", "Critical"];
-    const comps = [
-      "zero civilian noise",
-      "no digital trace",
-      "no Continental collateral",
-      "maintain camera blindness",
-      "asset must leave breathing",
-    ];
-    const rewards = [
-      "One Golden Marker",
-      "Obsidian token",
-      "Full file erasure",
-      "Debt cleared with local branch",
-      "Unknown — High Table discretion",
-    ];
-    const cities = ["London", "Berlin", "Osaka", "Casablanca", "New York", "Rome", "Lisbon", "Marrakesh"];
-
-    const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
-    return {
-      id: "MK-" + String(Math.floor(10 + Math.random() * 89)),
-      type: pick(types),
-      priority: pick(priorities),
-      city: pick(cities),
-      complication: pick(comps),
-      reward: pick(rewards),
-    };
-  }
-
-  return (
+              return (
                 <div style={{ fontSize: "11px", color: "#0ff" }}>
                   Protocol online. No records. No witnesses.
                 </div>

@@ -19,7 +19,6 @@ export default function Landing() {
     document.documentElement.style.setProperty("--accent-color", t.accent);
     document.documentElement.style.setProperty("--bg-color", t.bg);
     document.documentElement.style.setProperty("--border-color", t.border);
-    localStorage.setItem("tsd_theme", variant);
   }, [variant]);
 
   function enter() {
@@ -31,12 +30,13 @@ export default function Landing() {
       style={{
         height: "100vh",
         width: "100vw",
-        background: "radial-gradient(circle at top, rgba(255,255,255,0.04), #000)",
+        background: "radial-gradient(circle at top, rgba(255,255,255,0.03), #000)",
         color: "var(--accent-color)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        fontFamily: "monospace",
+        fontFamily: "Courier New, monospace",
+        padding: "16px",
       }}
       onKeyDown={(e) => {
         if (e.key === "Enter") enter();
@@ -45,36 +45,45 @@ export default function Landing() {
     >
       <div
         style={{
-          maxWidth: "540px",
+          maxWidth: "520px",
+          width: "100%",
           textAlign: "center",
           padding: "24px",
           border: "1px solid var(--border-color)",
           borderRadius: "10px",
-          background: "rgba(0,0,0,0.8)",
+          background: "rgba(0,0,0,0.9)",
+          boxShadow: "0 0 30px rgba(0,0,0,0.7)",
         }}
       >
-        <div style={{ fontSize: "11px", letterSpacing: "0.25em", marginBottom: "8px" }}>
-          SILENT DIRECTORY INITIATION
+        <div style={{ fontSize: "11px", letterSpacing: "0.25em", marginBottom: "10px", opacity: 0.8 }}>
+          SILENT DIRECTORY // ACCESS GATE
         </div>
-        <h1 className="glitch" style={{ marginBottom: "12px" }}>
+        <h1
+          style={{
+            fontSize: "1.8rem",
+            marginBottom: "10px",
+            textShadow: "0 0 8px rgba(0,0,0,0.8)",
+          }}
+        >
           THE SILENT DIRECTORY
         </h1>
-        <p style={{ fontSize: "12px", marginBottom: "18px" }}>
-          An unlisted network. No public records. No official operators.
-          Access is granted on vibe and reputation alone.
+        <p style={{ fontSize: "12px", marginBottom: "10px", opacity: 0.85 }}>
+          Off-ledger contacts. Unlisted operators. No official affiliation.
+          <br />
+          If you&apos;re seeing this, you were never meant to… and yet, here we are.
         </p>
-        <p style={{ fontSize: "11px", marginBottom: "18px", opacity: 0.8 }}>
-          Variant loaded: <strong>{variant.toUpperCase()}</strong> // Theme seeded for this session.
+        <p style={{ fontSize: "11px", marginBottom: "16px", opacity: 0.7 }}>
+          Variant loaded: <strong>{variant.toUpperCase()}</strong> // Palette seeded for this session.
         </p>
         <button
           onClick={enter}
           className="btn"
-          style={{ padding: "10px 20px", fontSize: "12px" }}
+          style={{ padding: "10px 22px", fontSize: "12px" }}
         >
           ENTER DIRECTORY
         </button>
         <p style={{ fontSize: "10px", marginTop: "10px", opacity: 0.7 }}>
-          Press ENTER to continue.
+          Press ENTER to continue. No markers required… this time.
         </p>
       </div>
     </div>
