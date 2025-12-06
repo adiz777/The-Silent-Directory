@@ -1,90 +1,84 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+const THEMES = [
+  "continental-gold",
+  "high-table-crimson",
+  "shadow-blue",
+  "terminal-wick"
+];
+
+const QUOTES = [
+  "“If not now, then when? If not you, then who?”",
+  "“Rules and consequences. A simple exchange.”",
+  "“Every shadow has a keeper.”",
+  "“Welcome back, operator.”",
+  "“The chosen are rarely the willing.”",
+  "“Exile is temporary. Purpose is permanent.”"
+];
+
+const BOOT_LINES = [
+  "Decrypting secure channels…",
+  "Synchronizing network nodes…",
+  "Verifying Continental credentials…",
+  "Routing through shadow proxies…",
+  "Rebuilding archive index…",
+  "Checking High Table directives…",
+  "Initializing Whisper relay…",
+  "Preparing operator console…",
+  "Loading blacksite configurations…",
+  "Secure environment established."
+];
 
 export default function Landing() {
   const navigate = useNavigate();
-
-  const variant = useMemo(() => {
-    const options = ["continental", "high", "shadow"];
-    return options[Math.floor(Math.random() * options.length)];
-  }, []);
+  const [theme, setTheme] = useState("");
+  const [quote, setQuote] = useState("");
+  const [bootIndex, setBootIndex] = useState(0);
+  const [finished, setFinished] = useState(false);
 
   useEffect(() => {
-    const themes = {
-      continental: { accent: "#f5d76e", bg: "#050301", border: "#f5d76e" },
-      high: { accent: "#ff5555", bg: "#150000", border: "#ff5555" },
-      shadow: { accent: "#0ff", bg: "#000010", border: "#0ff" },
-    };
-    const t = themes[variant] || themes.shadow;
-    document.documentElement.style.setProperty("--accent-color", t.accent);
-    document.documentElement.style.setProperty("--bg-color", t.bg);
-    document.documentElement.style.setProperty("--border-color", t.border);
-  }, [variant]);
+    const randomTheme = THEMES[Math.floor(Math.random() * THEMES.length)];
+    setTheme(randomTheme);
+    localStorage.setItem("sd_theme", randomTheme);
 
-  function enter() {
-    navigate("/login");
-  }
+    const randomQuote = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+    setQuote(randomQuote);
+
+    const interval = setInterval(() => {
+      setBootIndex((prev) => {
+        if (prev >= BOOT_LINES.length - 1) {
+          clearInterval(interval);
+          setFinished(true);
+        }
+        return prev + 1;
+      });
+    }, 700);
+
+    const auto = setTimeout(() => {
+      navigate("/login");
+    }, BOOT_LINES.length * 700 + 1200);
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(auto);
+    };
+  }, [navigate]);
 
   return (
-    <div
-      style={{
-        height: "100vh",
-        width: "100vw",
-        background: "radial-gradient(circle at top, rgba(255,255,255,0.03), #000)",
-        color: "var(--accent-color)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        fontFamily: "Courier New, monospace",
-        padding: "16px",
-      }}
-      onKeyDown={(e) => {
-        if (e.key === "Enter") enter();
-      }}
-      tabIndex={0}
-    >
-      <div
-        style={{
-          maxWidth: "520px",
-          width: "100%",
-          textAlign: "center",
-          padding: "24px",
-          border: "1px solid var(--border-color)",
-          borderRadius: "10px",
-          background: "rgba(0,0,0,0.9)",
-          boxShadow: "0 0 30px rgba(0,0,0,0.7)",
-        }}
-      >
-        <div style={{ fontSize: "11px", letterSpacing: "0.25em", marginBottom: "10px", opacity: 0.8 }}>
-          SILENT DIRECTORY // ACCESS GATE
+    <div className="w-full h-full flex items-center justify-center p-6" data-theme={theme}>
+      <div className="w-full max-w-2xl text-center">
+        <h1 className="text-xl mb-6">{quote}</h1>
+        <div className="text-left mb-6">
+          {BOOT_LINES.slice(0, bootIndex).map((line, i) => (
+            <p key={i}>{line}</p>
+          ))}
         </div>
-        <h1
-          style={{
-            fontSize: "1.8rem",
-            marginBottom: "10px",
-            textShadow: "0 0 8px rgba(0,0,0,0.8)",
-          }}
-        >
-          THE SILENT DIRECTORY
-        </h1>
-        <p style={{ fontSize: "12px", marginBottom: "10px", opacity: 0.85 }}>
-          Off-ledger contacts. Unlisted operators. No official affiliation.
-          <br />
-          If you&apos;re seeing this, you were never meant to… and yet, here we are.
-        </p>
-        <p style={{ fontSize: "11px", marginBottom: "16px", opacity: 0.7 }}>
-          Variant loaded: <strong>{variant.toUpperCase()}</strong> // Palette seeded for this session.
-        </p>
-        <button
-          onClick={enter}
-          className="btn"
-          style={{ padding: "10px 22px", fontSize: "12px" }}
-        >
-          ENTER DIRECTORY
-        </button>
-        <p style={{ fontSize: "10px", marginTop: "10px", opacity: 0.7 }}>
-          Press ENTER to continue. No markers required… this time.
-        </p>
+        {!finished && (
+          <button onClick={() => navigate("/login")} className="px-4 py-2">
+            Skip Intro
+          </button>
+        )}
       </div>
     </div>
   );

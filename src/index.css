@@ -1,153 +1,342 @@
-/* Theme variables */
+/* ======================================================
+   THE SILENT DIRECTORY — CINEMATIC MASTER THEME
+   Pure CSS • No Tailwind • No PostCSS • Film-grade UI
+====================================================== */
+
+/* ==============================
+   CORE VARIABLES
+============================== */
+
 :root {
-  --accent-color: var(--accent-color, #0ff);
-  --bg-color: #000;
-  --border-color: var(--accent-color, #0ff);
+  --bg: #050607;
+  --bg-panel: rgba(12, 14, 16, 0.78);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(212, 175, 55, 0.4);
+
+  --gold: #d4af37;
+  --amber: #f4c07a;
+  --crimson: #8b1c1c;
+  --dark-red: #3a0606;
+  --cyan: #6ab0b8;
+
+  --text-main: #e6e6e6;
+  --text-muted: #9aa0a6;
+  --text-dim: #666;
+
+  --glow-gold: 0 0 30px rgba(212, 175, 55, 0.18);
+  --glow-red: 0 0 32px rgba(160, 30, 30, 0.35);
 }
 
-/* ===== Global Reset ===== */
+/* ==============================
+   BASE RESET
+============================== */
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-html, body, #root {
-  height: 100%;
+html,
+body,
+#root {
   width: 100%;
-  background: var(--bg-color, #000);
-  color: var(--accent-color, #0ff);
+  height: 100%;
+  background: radial-gradient(circle at top, #0b0d10, #050607 72%);
+  color: var(--text-main);
   font-family: "Courier New", monospace;
+  letter-spacing: 0.03em;
   overflow: hidden;
 }
 
-/* ===== Glitch Effect (for headings) ===== */
+/* ==============================
+   TYPOGRAPHY
+============================== */
+
+.heading-main {
+  font-size: 1.1rem;
+  letter-spacing: 0.28em;
+  color: var(--amber);
+  text-shadow: var(--glow-gold);
+}
+
+.heading-danger {
+  color: #ff6b6b;
+  text-shadow: var(--glow-red);
+}
+
+.text-muted {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* ==============================
+   PANELS
+============================== */
+
+.panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  position: relative;
+  backdrop-filter: blur(12px);
+  box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.65);
+}
+
+.panel.gold {
+  border-color: var(--border-strong);
+}
+
+.panel.red {
+  border-color: rgba(180, 50, 50, 0.6);
+}
+
+/* ==============================
+   SIDEBAR
+============================== */
+
+.sidebar {
+  width: 260px;
+  height: 100%;
+  padding: 14px;
+  border-right: 1px solid var(--border);
+  background: linear-gradient(to bottom, #070809, #050607);
+}
+
+.sidebar button {
+  width: 100%;
+  background: none;
+  border: 1px solid transparent;
+  padding: 8px 10px;
+  margin-bottom: 4px;
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  text-align: left;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.sidebar button:hover {
+  border-color: var(--border);
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.sidebar .danger:hover {
+  color: #ff5c5c;
+  background: rgba(120, 0, 0, 0.35);
+}
+
+/* ==============================
+   LIST ITEMS
+============================== */
+
+.list-item {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.45);
+  margin-bottom: 8px;
+}
+
+/* ==============================
+   SCROLLBAR
+============================== */
+
+*::-webkit-scrollbar {
+  width: 6px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(#555, #111);
+  border-radius: 6px;
+}
+
+/* ==============================
+   SUBTLE GLITCH
+============================== */
+
 .glitch {
   position: relative;
-  color: var(--accent-color, #0ff);
-  font-size: 1.8rem;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  animation: flicker 2s infinite;
 }
 
 .glitch::before,
 .glitch::after {
   content: attr(data-text);
   position: absolute;
-  left: 0;
+  top: 0;
+  opacity: 0.2;
 }
 
 .glitch::before {
-  animation: glitchTop 2s infinite;
-  color: #f0f;
-  clip: rect(0, 900px, 0, 0);
+  left: -1px;
 }
 
 .glitch::after {
-  animation: glitchBottom 1.5s infinite;
-  color: var(--accent-color, #0ff);
-  clip: rect(0, 900px, 0, 0);
+  left: 1px;
 }
 
-@keyframes glitchTop {
-  0% { clip: rect(0, 900px, 0, 0); }
-  10% { clip: rect(10px, 900px, 40px, 0); transform: translate(-2px, -2px); }
-  20% { clip: rect(0, 900px, 0, 0); }
-  30% { clip: rect(20px, 900px, 60px, 0); transform: translate(2px, 2px); }
-  40%, 100% { clip: rect(0, 900px, 0, 0); transform: none; }
+/* ==============================
+   BOOT SEQUENCE (LANDING)
+============================== */
+
+.boot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
 }
 
-@keyframes glitchBottom {
-  0% { clip: rect(0, 900px, 0, 0); }
-  10% { clip: rect(60px, 900px, 90px, 0); transform: translate(2px, 2px); }
-  20% { clip: rect(0, 900px, 0, 0); }
-  30% { clip: rect(80px, 900px, 120px, 0); transform: translate(-2px, -2px); }
-  40%, 100% { clip: rect(0, 900px, 0, 0); transform: none; }
+.boot-text {
+  font-size: 0.7rem;
+  line-height: 1.9;
+  color: rgba(212, 175, 55, 0.6);
+  white-space: pre;
+  animation: bootLoad 4s steps(40) forwards;
 }
 
-@keyframes flicker {
-  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
-    opacity: 1;
+@keyframes bootLoad {
+  from { max-height: 0; opacity: 0; }
+  to { max-height: 100vh; opacity: 1; }
+}
+
+/* ==============================
+   EXCOMMUNICADO MODE
+============================== */
+
+body.excommunicado {
+  background: radial-gradient(circle at top, #220404, #050607 75%);
+  --border: rgba(200, 70, 70, 0.55);
+  --border-strong: rgba(255, 80, 80, 0.75);
+  --text-main: #ffd6d6;
+}
+
+body.excommunicado::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 0, 0, 0.05),
+    rgba(255, 0, 0, 0.05) 1px,
+    transparent 2px,
+    transparent 4px
+  );
+  animation: scanRed 6s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes scanRed {
+  from { background-position-y: 0; }
+  to { background-position-y: 100%; }
+}
+
+/* ==============================
+   EXCOMMUNICADO BOUNTY SCREEN
+============================== */
+
+.bounty {
+  border: 2px solid #ff3c3c;
+  padding: 20px;
+  background: linear-gradient(180deg, #160505, #050607);
+  box-shadow: 0 0 60px rgba(255, 0, 0, 0.4);
+  text-align: center;
+}
+
+.bounty h1 {
+  color: #ff4444;
+  letter-spacing: 0.4em;
+}
+
+.bounty .amount {
+  font-size: 1.4rem;
+  color: #ff6b6b;
+  margin-top: 6px;
+}
+
+/* ==============================
+   HIGH TABLE WATERMARK
+============================== */
+
+body::after {
+  content: "HIGH TABLE • ISSUED AUTHORITY";
+  position: fixed;
+  bottom: 18px;
+  right: 20px;
+  font-size: 0.55rem;
+  letter-spacing: 0.45em;
+  color: rgba(212, 175, 55, 0.12);
+  pointer-events: none;
+}
+
+/* ==============================
+   CONTINENTAL COINS
+============================== */
+
+.coin {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 30%, #fff2b0, #b38b1d 60%, #6b4f00);
+  border: 2px solid #d4af37;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.6), 0 0 12px rgba(212,175,55,0.5);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  color: #2a1a00;
+}
+
+/* ==============================
+   MAP STYLING
+============================== */
+
+.leaflet-container {
+  background: #050607;
+  filter: grayscale(1) contrast(1.3) brightness(0.55);
+}
+
+.leaflet-tile {
+  filter: invert(1) grayscale(1) brightness(0.8);
+}
+
+/* ==============================
+   PRINT / PDF DOSSIERS
+============================== */
+
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
   }
-  20%, 24%, 55% {
-    opacity: 0.4;
+
+  .sidebar,
+  button,
+  nav {
+    display: none !important;
   }
-}
 
-/* ===== Panels (Dashboard Sidebar) ===== */
-.panel {
-  background: rgba(0, 0, 0, 0.6);
-  border: 1px solid rgba(0, 255, 255, 0.2);
-  padding: 12px;
-  margin-bottom: 14px;
-  border-radius: 6px;
-}
+  .panel {
+    border: 2px solid black;
+    page-break-inside: avoid;
+  }
 
-.panel:hover {
-  border-color: var(--accent-color, #0ff);
-  box-shadow: 0 0 8px #0ff;
-}
+  body::after {
+    content: "ISSUED BY THE HIGH TABLE";
+    position: fixed;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%,-50%) rotate(-25deg);
+    font-size: 3rem;
+    opacity: 0.07;
+    letter-spacing: 0.25em;
+  }
 
-/* ===== Buttons ===== */
-.btn {
-  padding: 10px;
-  border: 1px solid #0ff;
-  background: rgba(0, 0, 0, 0.7);
-  color: var(--accent-color, #0ff);
-  cursor: pointer;
-  border-radius: 6px;
-  transition: 0.2s ease;
-}
-
-.btn:hover {
-  background: #0ff;
-  color: #000;
-  box-shadow: 0 0 10px #0ff;
-}
-
-.btn.ghost {
-  border-color: #f0f;
-  color: #f0f;
-}
-
-.btn.ghost:hover {
-  background: #f0f;
-  color: #000;
-  box-shadow: 0 0 10px #f0f;
-}
-
-/* ===== Table Styling ===== */
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.85rem;
-}
-
-.table th, .table td {
-  padding: 6px 8px;
-  border-bottom: 1px solid rgba(0, 255, 255, 0.1);
-  text-align: left;
-}
-
-.table th {
-  color: var(--accent-color, #0ff);
-  border-bottom: 2px solid #0ff;
-}
-
-.codename:hover {
-  color: #f0f;
-  cursor: pointer;
-}
-
-/* ===== Small Text ===== */
-.small {
-  font-size: 0.8rem;
-  opacity: 0.7;
-}
-
-/* ===== Map ===== */
-#map {
-  height: 100%;
-  width: 100%;
+  .redacted {
+    background: black;
+    color: black;
+  }
 }

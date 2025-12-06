@@ -1,27 +1,38 @@
-// Event Bus - Central event system for game-wide communications
-class EventBus {
-  constructor() {
-    this.events = {};
-  }
+// src/utils/eventBus.js
 
-  on(event, callback) {
-    if (!this.events[event]) {
-      this.events[event] = [];
-    }
-    this.events[event].push(callback);
-  }
+const subscribers = {};
 
-  off(event, callback) {
-    if (this.events[event]) {
-      this.events[event] = this.events[event].filter(cb => cb !== callback);
-    }
+/**
+ * Subscribe to a global event
+ * @param {string} event
+ * @param {function} callback
+ */
+export function subscribe(event, callback) {
+  if (!subscribers[event]) {
+    subscribers[event] = [];
   }
+  subscribers[event].push(callback);
 
-  emit(event, data) {
-    if (this.events[event]) {
-      this.events[event].forEach(callback => callback(data));
-    }
-  }
+  return () => {
+    subscribers[event] = subscribers[event].filter(cb => cb !== callback);
+  };
 }
 
-export default new EventBus();
+/**
+ * Emit a global event
+ * @param {string} event
+ * @param {any} data
+ */
+export function emit(event, data) {
+  if (!subscribers[event]) return;
+  subscribers[event].forEach(callback => callback(data));
+}
+
+/**
+ * Clear all listeners (used for resets)
+ */
+export function clearEventBus() {
+  Object.keys(subscribers).forEach(event => {
+    subscribers[event] = [];
+  });
+}

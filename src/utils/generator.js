@@ -1,168 +1,153 @@
 import { faker } from "@faker-js/faker";
 
-// --- PROFESSIONS (100+) ---
-const professions = [
-  "Weapons Consultant","Body Remover","Clean-Up Coordinator","Forensic Accountant",
-  "Negotiation Specialist","Private Security Operative","Risk Auditor","Counter-Espionage Officer",
-  "Field Engineer","Digital Forensics Expert","Smuggling Route Analyst","Covert Diplomat",
-  "Tactical Medic","Corporate Fixer","Crisis Negotiator","Undercover Transporter",
-  "Cyber Intelligence Analyst","Black-Market Broker","Tech Recovery Specialist",
-  "Surveillance Specialist","Infiltration Expert","Ballistics Analyst","Safehouse Operator",
-  "Explosives Specialist","Encryption Consultant","Supply Chain Fixer","Night Courier",
-  "Weapon Smuggler","Tactical Planner","Info Launderer","Shadow Operative","Hostage Negotiator",
-  "Escape Route Architect","Ghost Driver","Cultural Attaché","Underworld Connector",
-  "Forgery Expert","Identity Broker","Data Miner","Silent Tracker","Espionage Handler",
-  "Combat Instructor","Covert Recruiter","Black Bag Specialist","Interrogation Consultant",
-  "Dead Drop Manager","Codebreaker","Urban Scout","Tactical Pilot","Naval Liaison",
-  "Cyber Wetworker","Signal Interceptor","Silent Locksmith","Cover Story Fabricator",
-  "Underground Healer","Money Launderer","Illegal Arms Dealer","Conflict Mediator",
-  "Black-Hat Hacker","White-Hat Ghost","Zero-Day Broker","Drone Specialist","Silent Observer",
-  "Covert Assassin","Political Fixer","Security Analyst","Subterfuge Engineer",
-  "Linguistics Expert","Disguise Specialist","Survival Trainer","Poison Expert",
-  "Silent Cleaner","Biohazard Handler","Undercover Analyst","Weapon Tester","Tactical Negotiator",
-  "Archive Infiltrator","Radio Intercept Officer","Sleeper Agent Liaison","Chemical Ops Expert",
-  "Covert Saboteur","Artifact Smuggler","Financial Manipulator","Data Ghost",
-  "Wiretap Expert","Counter-Hacker","Urban Combatant","Crypto Launderer",
-  "Bounty Contractor","Neutralizer","Signal Jamming Specialist","Vehicular Specialist",
-  "Supply Saboteur","Border Fixer","Arms Collector","Vault Cracker","Counterfeit Master",
-  "Info Broker","Undercover Asset","Transport Fixer","Network Phantom","Black Ops Surgeon"
+// Helper arrays
+const specialties = [
+  "Close Protection",
+  "Asset Recovery",
+  "Covert Transport",
+  "Information Laundering",
+  "Counter-Surveillance",
+  "Cyber Reconnaissance",
+  "Forensic Accounting",
+  "Arms Brokering",
+  "Extraction Planning",
+  "Operational Logistics",
 ];
 
-// --- AGENCIES (100+) ---
-const agencies = [
-  "Kronos Group","Helix Division","Phantom Circle","Obsidian Agency","Titan Recovery","Eclipse Network",
-  "Atlas Logistics","Vigil Corp","Nova Operations","Ghost Protocol Unit","Blacklight Bureau","Silent Order",
-  "Iron Syndicate","Emerald Veil","Spectre Ops","Crimson Directive","Orchid Network","Silver Fang Unit",
-  "Wraith Collective","Onyx Commission","Azure Node","Nightshade Cell","Hollow Star Bureau","Cipher Division",
-  "Cobalt Front","Ravenwing Ops","Venom Protocol","Umbra Syndicate","Deepwave Initiative","Arclight Agency",
-  "Duskfall Group","Phantom Hive","Shadow Council","Echo Network","Serpent Guild","Silent Spire",
-  "Ironhand Circle","Lucid Veil","Ashen Ring","Noctis Bureau","Redline Agency","Silent Mantle",
-  "Stormveil Ops","Ghostwalkers","Black Sun Division","Horizon Bureau","Orion Directive","Titanfall Cell",
-  "Oblivion Network","Nightfall Circle","Spectral Division","Silent Echo","Null Point Bureau","Vector Cell",
-  "Silent Guard","Warden Protocol","Cipherfall Division","Coldsteel Agency","Arcanum Bureau","Silent Flame",
-  "Hyperion Network","Noir Protocol","Aurora Ops","Catalyst Group","Phantom Aegis","Sentinel Bureau",
-  "Frostveil Division","Abyss Protocol","Radiant Syndicate","Monarch Bureau","Nether Ops","Umbra Veil",
-  "Silent Reign","Grimlight Circle","Black Dagger Unit","Phantom Dawn","Steelshade Ops","Silent Tide",
-  "Omega Protocol","Cryptic Bureau","Silent Bastion","Silent Tower","Bloodveil Network","Phantom Forge",
-  "Shatterpoint Division","Silent Wolf Cell","Voidline Bureau","Spectre Wing","Zero Point Ops","Silent Flame",
-  "Obsidian Dawn","Ghostfang Unit","Nebula Bureau","Silent Horizon","Silent Nexus","Cinder Veil","Silent Throne"
-];
+const risks = ["Low", "Moderate", "High", "Severe", "Unknown"];
 
-// --- CODENAME GENERATOR ---
-const codenameAnimals = ["Viper","Falcon","Raven","Wolf","Hawk","Shade","Echo","Lynx","Cobra","Panther","Jackal","Scorpion","Python","Owl","Fox"];
-function generateCodename() {
-  return (
-    faker.word.adjective().charAt(0).toUpperCase() +
-    faker.word.adjective().slice(1) +
-    " " +
-    faker.helpers.arrayElement(codenameAnimals)
-  );
+const weaponTypes = ["Handgun", "Sniper", "Rifle", "Shotgun", "SMG", "Melee", "Exotic"];
+const weaponRarity = ["Common", "Uncommon", "Rare", "Legendary", "Prototype"];
+
+const missionTypes = ["Extraction", "Recon", "Erasure", "Retrieval", "Pursuit"];
+const difficulties = ["Low", "Medium", "High", "Extreme"];
+const priorities = ["Routine", "Time-Sensitive", "Urgent", "Non-Negotiable"];
+
+const threatLevels = ["Level 1", "Level 2", "Level 3", "Level 4", "Level 5"];
+
+// ---- Dossiers ----
+function generateDossier(id) {
+  const firstName = faker.person.firstName();
+  const lastName = faker.person.lastName();
+  const city = faker.location.city();
+  const country = faker.location.country();
+
+  return {
+    id: `DOS-${id}`,
+    name: `${firstName} ${lastName}`,
+    codename: faker.word.adjective().toUpperCase() + " " + faker.animal.type().toUpperCase(),
+    specialty: faker.helpers.arrayElement(specialties),
+    risk: faker.helpers.arrayElement(risks),
+    notes: faker.lorem.sentence(),
+    city,
+    nationality: country,
+  };
 }
 
-// --- FALLBACK CITIES (from local cities.json) ---
-let allCities = [];
-async function loadCities() {
-  if (allCities.length) return allCities;
-  const res = await fetch("/cities.json");
-  const raw = await res.json();
-
-  // Normalize GeoNames format -> expected format
-  allCities = raw.map(c => ({
-    id: c.id,
-    name: c.name,
-    country: c.country,
-    admin1: c.admin1,
-    lat: parseFloat(c.lat),
-    lng: parseFloat(c.lon),   // map "lon" to "lng"
-    pop: parseInt(c.pop || 0)
-  }));
-
-  return allCities;
+// ---- Weapons ----
+function generateWeapon(id) {
+  return {
+    id: `WPN-${id}`,
+    name: faker.commerce.productName(),
+    type: faker.helpers.arrayElement(weaponTypes),
+    caliber: faker.helpers.arrayElement(["9mm", "5.56", "7.62", ".45 ACP", "12g", "Unknown"]),
+    origin: faker.location.country(),
+    weight: faker.number.float({ min: 0.5, max: 10, precision: 0.1 }) + " kg",
+    rarity: faker.helpers.arrayElement(weaponRarity),
+    useCase: faker.helpers.arrayElement([
+      "Close quarters",
+      "Long-range precision",
+      "Crowd control",
+      "Silent operation",
+      "Ritual contract",
+    ]),
+    serial: faker.string.alphanumeric(10).toUpperCase(),
+  };
 }
 
-// --- API CITY LOOKUP (OpenStreetMap Nominatim) ---
-async function fetchCityFromAPI(cityName) {
-  try {
-    const url = `https://nominatim.openstreetmap.org/search?city=${encodeURIComponent(cityName)}&format=json&limit=1`;
-    const res = await fetch(url, { headers: { "User-Agent": "TheSilentDirectory/1.0" } });
-    const data = await res.json();
-    if (data.length > 0) {
-      return {
-        name: cityName,
-        lat: parseFloat(data[0].lat),
-        lng: parseFloat(data[0].lon),
-        country: data[0].display_name.split(",").pop().trim(),
-      };
-    }
-  } catch (err) {
-    console.error("API lookup failed:", err);
-  }
-  return null;
+// ---- Missions ----
+function generateMission(id) {
+  const location = `${faker.location.city()}, ${faker.location.country()}`;
+  const deadline = faker.date.soon({ days: 14 });
+
+  return {
+    id: `MIS-${id}`,
+    type: faker.helpers.arrayElement(missionTypes),
+    difficulty: faker.helpers.arrayElement(difficulties),
+    priority: faker.helpers.arrayElement(priorities),
+    location,
+    target: faker.person.fullName(),
+    reward: faker.finance.amount({ min: 5000, max: 500000, dec: 0 }) + " coins",
+    window: deadline.toISOString(),
+  };
 }
 
-// --- FUZZY MATCH (fallback) ---
-function fuzzyMatchCity(cities, query) {
-  const lower = query.toLowerCase();
-  return cities.find(c => lower.includes(c.name.toLowerCase()));
+// ---- Blacklist ----
+function generateBlacklistEntry(id) {
+  return {
+    id: `BLK-${id}`,
+    name: faker.person.fullName(),
+    codename: faker.hacker.noun().toUpperCase() + "-" + faker.number.int({ min: 10, max: 99 }),
+    threat: faker.helpers.arrayElement(threatLevels),
+    lastSeen: `${faker.location.city()}, ${faker.location.country()}`,
+    background: faker.lorem.sentence(),
+  };
 }
 
-// --- MAIN GENERATOR ---
+// ---- Agents (generateAgents) ----
 export async function generateAgents(query, count = 10) {
-  const lowerQuery = query.toLowerCase();
+  const city = query || faker.location.city();
+  const country = faker.location.country();
 
-  // Try API first
-  let cityData = await fetchCityFromAPI(query);
-
-  // Fallback to local cities.json
-  if (!cityData) {
-    const cities = await loadCities();
-    const match = fuzzyMatchCity(cities, query);
-    if (match) {
-      cityData = {
-        name: match.name,
-        lat: match.lat,
-        lng: match.lng,
-        country: match.country,
-      };
-    }
-  }
-
-  // If still nothing, pick random from local dataset
-  if (!cityData) {
-    const cities = await loadCities();
-    const rand = faker.helpers.arrayElement(cities);
-    cityData = {
-      name: rand.name,
-      lat: rand.lat,
-      lng: rand.lng,
-      country: rand.country,
-    };
-  }
-
-  // Generate agents around city
-  const results = [];
+  const agents = [];
   for (let i = 0; i < count; i++) {
-    let prof = faker.helpers.arrayElement(professions);
-
-    // keyword bias
-    if (lowerQuery.includes("weapon")) prof = "Weapons Consultant";
-    if (lowerQuery.includes("body")) prof = "Body Remover";
-    if (lowerQuery.includes("clean")) prof = "Clean-Up Coordinator";
-    if (lowerQuery.includes("cyber")) prof = "Cyber Intelligence Analyst";
-
-    results.push({
+    agents.push({
       fullName: faker.person.fullName(),
-      codename: generateCodename(),
-      profession: prof,
-      nationality: cityData.country,
-      city: cityData.name,
+      codename: faker.word.adjective().toUpperCase() + " " + faker.animal.type().toUpperCase(),
+      profession: faker.person.jobTitle(),
+      nationality: country,
+      city,
       address: faker.location.streetAddress({ useFullAddress: true }),
       email: faker.internet.email(),
       phone: faker.phone.number(),
-      agency: faker.helpers.arrayElement(agencies),
-      lat: cityData.lat + (Math.random() - 0.5) * 0.1,
-      lng: cityData.lng + (Math.random() - 0.5) * 0.1,
+      agency: faker.company.name(),
+      lat: faker.location.latitude(),
+      lng: faker.location.longitude(),
     });
   }
-  return results;
+
+  return agents;
+}
+
+// ---- Continentals (200 hotels) ----
+export function generateContinentals(count = 200) {
+  const hotels = [];
+  for (let i = 0; i < count; i++) {
+    hotels.push({
+      id: `CON-${i + 1}`,
+      name: "The Continental " + faker.location.city(),
+      city: faker.location.city(),
+      manager: faker.person.fullName(),
+      rating: faker.number.int({ min: 3, max: 5 }),
+      roomsAvailable: faker.number.int({ min: 10, max: 200 }),
+    });
+  }
+  return hotels;
+}
+
+// ---- Main world snapshot (generateAll) ----
+export function generateAll() {
+  const dossiers = Array.from({ length: 200 }, (_, i) => generateDossier(i + 1));
+  const missions = Array.from({ length: 150 }, (_, i) => generateMission(i + 1));
+  const weapons = Array.from({ length: 200 }, (_, i) => generateWeapon(i + 1));
+  const blacklist = Array.from({ length: 120 }, (_, i) =>
+    generateBlacklistEntry(i + 1)
+  );
+
+  return {
+    dossiers,
+    missions,
+    weapons,
+    blacklist,
+  };
 }
