@@ -1,7 +1,11 @@
-import React, { useEffect, useState, useMemo } from "react";
-import { generateContinentals } from "../utils/generator.js";
+import React, { useEffect, useMemo, useState } from "react";
+import DirectoryLayout from "../components/DirectoryLayout";
+import { generateContinentals } from "../utils/generator";
+import { useWorld } from "../context/WorldContext";
 
 export default function Continentals() {
+  const { alias: globalAlias } = useWorld();
+
   const [hotels, setHotels] = useState([]);
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState(null);
@@ -9,13 +13,15 @@ export default function Continentals() {
   const [nights, setNights] = useState(1);
   const [slip, setSlip] = useState(null);
 
+  // Load synthetic continentals once
   useEffect(() => {
     const data = generateContinentals(200);
     setHotels(data);
   }, []);
 
+  // Filtered list by search
   const filtered = useMemo(() => {
-    const q = search.toLowerCase();
+    const q = search.trim().toLowerCase();
     if (!q) return hotels;
     return hotels.filter((h) => {
       return (
@@ -26,189 +32,223 @@ export default function Continentals() {
     });
   }, [hotels, search]);
 
-  const handleBook = (hotel) => {
+  // Select a branch
+  const handleSelect = (hotel) => {
     setSelected(hotel);
     setSlip(null);
+    if (!alias && globalAlias) {
+      setAlias(globalAlias);
+    }
   };
 
+  // Confirm booking -> generate slip
   const confirmBooking = () => {
-    if (!selected || !alias) return;
+    if (!selected || !alias.trim()) return;
+
+    const now = new Date();
+    const id = `SLIP-${now.getTime().toString(16).toUpperCase()}`;
+
     setSlip({
-      id: `SLIP-${Date.now()}`,
-      alias,
+      id,
+      alias: alias.trim(),
       nights,
       hotel: selected.name,
       city: selected.city,
       manager: selected.manager,
+      issuedAt: now.toLocaleString(),
     });
   };
 
+  const clearSlip = () => {
+    setSlip(null);
+  };
+
   return (
-    <div className="min-h-screen bg-black text-slate-100 font-mono px-4 md:px-6 lg:px-10 py-6">
-      <header className="mb-4">
-        <h1 className="text-sm md:text-base tracking-[0.3em] uppercase text-amber-300">
-          Continental Directory
-        </h1>
-        <p className="text-[11px] text-slate-400 mt-1 max-w-xl">
-          Fictional registry of Continental hotels used for aesthetic UI only.
-          Search, select, and generate an in-universe check-in slip. No real
-          bookings. No network calls.
-        </p>
-      </header>
-
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 xl:gap-6">
-        {/* LIST + SEARCH */}
-        <section className="xl:col-span-2 border border-slate-800 rounded-xl bg-black/70 backdrop-blur-sm p-4">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-3">
-            <div>
-              <h2 className="text-xs uppercase tracking-[0.25em]">
-                All Branches
-              </h2>
-              <p className="text-[10px] text-slate-500">
-                {hotels.length} synthetic entries. Filter by city, name or
-                manager.
-              </p>
-            </div>
-            <input
-              type="text"
-              className="bg-black/80 border border-slate-700 rounded-md px-3 py-1.5 text-xs outline-none focus:border-amber-400 w-full md:w-56"
-              placeholder="Search by city / name / manager"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
+    <DirectoryLayout title="Continental Network">
+      {/* PANEL 1: Registry + Search + Cards */}
+      <section className="sd-panel sd-panel-wide">
+        <div className="sd-panel-header">
+          <div>
+            <h2>Continental Registry</h2>
+            <p className="sd-muted">
+              Fictional registry of Continental branches. Synthetic only — no
+              real bookings, no network calls.
+            </p>
           </div>
+          <span className="sd-pill">
+            {hotels.length.toString().padStart(3, "0")} BRANCHES
+          </span>
+        </div>
 
-          <div className="max-h-[420px] overflow-y-auto space-y-2 pr-1">
-            {filtered.map((h) => (
-              <button
-                key={h.id}
-                onClick={() => handleBook(h)}
-                className={`w-full text-left border border-slate-800 rounded-md px-3 py-2 bg-black/60 hover:border-amber-400/80 hover:bg-black/80 transition-colors ${
-                  selected?.id === h.id ? "border-amber-400 bg-black" : ""
-                }`}
-              >
-                <div className="flex items-center justify-between text-xs mb-1">
-                  <span className="font-semibold text-slate-100">
-                    {h.name}
-                  </span>
-                  <span className="text-[10px] uppercase tracking-[0.18em] text-amber-300">
-                    {h.city}
-                  </span>
+        <div className="sd-search-row">
+          <input
+            type="text"
+            placeholder="Search city / branch / manager…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          {search && (
+            <button type="button" onClick={() => setSearch("")}>
+              Clear
+            </button>
+          )}
+        </div>
+
+        <div className="sd-cards">
+          {filtered.map((h) => (
+            <button
+              key={h.id}
+              type="button"
+              className={
+                "sd-card" + (selected?.id === h.id ? " active" : "")
+              }
+              onClick={() => handleSelect(h)}
+            >
+              <div className="sd-card-title">{h.name}</div>
+              <div className="sd-card-meta">
+                {h.city} &bull; Rating {h.rating}.0
+              </div>
+              <div className="sd-card-sub">
+                Manager: {h.manager}
+                <br />
+                Rooms available: {h.roomsAvailable}
+              </div>
+            </button>
+          ))}
+          {filtered.length === 0 && (
+            <div className="sd-hint">
+              No branches match that filter. Try another city or manager.
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* PANEL 2: Check-in console + slip */}
+      <section className="sd-panel sd-panel-wide">
+        <div className="sd-panel-header">
+          <div>
+            <h2>Continental Check-In Console</h2>
+            <p className="sd-muted">
+              Select a branch, set your operator alias and nights, then issue a
+              High Table-style check-in slip for aesthetic / PDF export only.
+            </p>
+          </div>
+        </div>
+
+        <div className="sd-map-grid">
+          {/* LEFT: ACTIVE BRANCH + FORM */}
+          <div>
+            {selected ? (
+              <>
+                <div className="sd-list-row">
+                  <div className="sd-strong">{selected.name}</div>
+                  <div className="sd-meta">
+                    {selected.city} &bull; Managed by {selected.manager}
+                    <br />
+                    Rating {selected.rating}.0 &bull; Rooms {selected.roomsAvailable}
+                  </div>
                 </div>
-                <div className="flex items-center justify-between text-[11px] text-slate-400">
-                  <span>
-                    Manager: <span className="text-slate-200">{h.manager}</span>
-                  </span>
-                  <span>
-                    Rating:{" "}
-                    <span className="text-amber-300">{h.rating}.0</span> • Rooms:{" "}
-                    <span className="text-slate-200">{h.roomsAvailable}</span>
-                  </span>
+
+                <div className="sd-slip" style={{ marginTop: "14px" }}>
+                  <h2>Issue Check-In Slip</h2>
+
+                  <label>
+                    OPERATOR ALIAS
+                    <input
+                      type="text"
+                      placeholder={globalAlias || "e.g. MAJOR_ADI"}
+                      value={alias}
+                      onChange={(e) => setAlias(e.target.value)}
+                    />
+                  </label>
+
+                  <label style={{ marginTop: "10px" }}>
+                    NIGHTS
+                    <input
+                      type="number"
+                      min={1}
+                      max={30}
+                      value={nights}
+                      onChange={(e) =>
+                        setNights(Math.max(1, Number(e.target.value) || 1))
+                      }
+                    />
+                  </label>
+
+                  <div style={{ marginTop: "12px", display: "flex", gap: "8px" }}>
+                    <button type="button" onClick={confirmBooking}>
+                      Generate Slip
+                    </button>
+                    {slip && (
+                      <button type="button" onClick={clearSlip}>
+                        Reset
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="sd-slip-body">
+                    <p className="sd-meta" style={{ marginTop: "10px" }}>
+                      Note: this is a **fictional** in-universe artefact for your
+                      UI and PDF exports only. No real reservation is made.
+                    </p>
+                  </div>
                 </div>
-              </button>
-            ))}
-            {filtered.length === 0 && (
-              <p className="text-[11px] text-slate-500">
-                No branches match that filter.
-              </p>
+              </>
+            ) : (
+              <div className="sd-hint">
+                Select a Continental branch from the registry on the left to
+                begin issuing a check-in slip.
+              </div>
             )}
           </div>
-        </section>
 
-        {/* BOOKING PANEL */}
-        <section className="border border-slate-800 rounded-xl bg-black/80 backdrop-blur-sm p-4">
-          <h2 className="text-xs uppercase tracking-[0.25em] mb-2">
-            Continental Check-In
-          </h2>
-          <p className="text-[11px] text-slate-400 mb-3">
-            Select a branch on the left, set your alias and nights, then print a
-            fake in-universe slip.
-          </p>
+          {/* RIGHT: SLIP + COIN VISUAL */}
+          <div>
+            {slip ? (
+              <div className="sd-slip">
+                <h2>Continental Check-In Slip</h2>
+                <div className="sd-slip-body">
+                  <p>
+                    <strong>Slip ID:</strong> {slip.id}
+                  </p>
+                  <p>
+                    <strong>Alias:</strong> {slip.alias}
+                  </p>
+                  <p>
+                    <strong>Branch:</strong> {slip.hotel}
+                  </p>
+                  <p>
+                    <strong>City:</strong> {slip.city}
+                  </p>
+                  <p>
+                    <strong>Manager:</strong> {slip.manager}
+                  </p>
+                  <p>
+                    <strong>Nights:</strong> {slip.nights}
+                  </p>
+                  <p>
+                    <strong>Issued:</strong> {slip.issuedAt}
+                  </p>
 
-          {selected ? (
-            <>
-              <div className="text-[11px] text-slate-300 mb-3">
-                <div className="font-semibold text-slate-100">
-                  {selected.name}
-                </div>
-                <div className="text-slate-400">
-                  {selected.city} • Managed by {selected.manager}
+                  <div className="sd-coin">
+                    CONTINENTAL COIN ACKNOWLEDGED &mdash; NO BLOOD OATH
+                  </div>
+
+                  <p className="sd-meta" style={{ marginTop: "10px" }}>
+                    Stamped: <span className="sd-strong">Issued by the High Table</span>{" "}
+                    &middot; For cinematic use only.
+                  </p>
                 </div>
               </div>
-
-              <div className="space-y-2 mb-3">
-                <div>
-                  <label className="block text-[10px] uppercase tracking-[0.2em] text-slate-500 mb-1">
-                    Operator Alias
-                  </label>
-                  <input
-                    type="text"
-                    className="bg-black/80 border border-slate-700 rounded-md px-3 py-1.5 text-xs w-full outline-none focus:border-amber-400"
-                    placeholder="e.g. MAJOR_ADI"
-                    value={alias}
-                    onChange={(e) => setAlias(e.target.value)}
-                  />
-                </div>
-                <div>
-                  <label className="block text-[10px] uppercase tracking-[0.2em] text-slate-500 mb-1">
-                    Nights
-                  </label>
-                  <input
-                    type="number"
-                    min={1}
-                    max={30}
-                    className="bg-black/80 border border-slate-700 rounded-md px-3 py-1.5 text-xs w-24 outline-none focus:border-amber-400"
-                    value={nights}
-                    onChange={(e) =>
-                      setNights(Math.max(1, Number(e.target.value) || 1))
-                    }
-                  />
-                </div>
+            ) : (
+              <div className="sd-hint">
+                Once you generate a slip, it will appear here with a coin
+                acknowledgement block suitable for screenshots / PDFs.
               </div>
-
-              <button
-                onClick={confirmBooking}
-                className="w-full text-xs uppercase tracking-[0.18em] border border-amber-400 text-amber-300 rounded-md py-1.5 hover:bg-amber-400/10 transition-colors"
-              >
-                Generate Check-In Slip
-              </button>
-            </>
-          ) : (
-            <p className="text-[11px] text-slate-500">
-              Select a branch from the directory to begin.
-            </p>
-          )}
-
-          {slip && (
-            <div className="mt-4 border border-amber-500/70 rounded-md px-3 py-3 bg-black/90">
-              <div className="text-[10px] uppercase tracking-[0.22em] text-amber-300 mb-2">
-                Continental Check-In Slip
-              </div>
-              <div className="text-[11px] text-slate-200">
-                <div>
-                  <span className="font-semibold">Slip ID:</span> {slip.id}
-                </div>
-                <div>
-                  <span className="font-semibold">Alias:</span> {slip.alias}
-                </div>
-                <div>
-                  <span className="font-semibold">Branch:</span> {slip.hotel}
-                </div>
-                <div>
-                  <span className="font-semibold">City:</span> {slip.city}
-                </div>
-                <div>
-                  <span className="font-semibold">Manager:</span>{" "}
-                  {slip.manager}
-                </div>
-                <div>
-                  <span className="font-semibold">Nights:</span> {slip.nights}
-                </div>
-              </div>
-            </div>
-          )}
-        </section>
-      </div>
-    </div>
+            )}
+          </div>
+        </div>
+      </section>
+    </DirectoryLayout>
   );
 }

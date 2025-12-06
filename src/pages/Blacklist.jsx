@@ -1,101 +1,69 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { generateAll } from "../utils/generator.js";
+import DirectoryLayout from "../components/DirectoryLayout";
+import { generateAll } from "../utils/generator";
 
 export default function Blacklist() {
   const [world, setWorld] = useState(null);
   const [query, setQuery] = useState("");
-  const [threatFilter, setThreatFilter] = useState("All");
 
   useEffect(() => {
-    const snapshot = generateAll();
-    setWorld(snapshot);
+    setWorld(generateAll());
   }, []);
 
-  const threats = ["All", "Level 1", "Level 2", "Level 3", "Level 4", "Level 5"];
-
-  const filtered = useMemo(() => {
+  const entries = useMemo(() => {
     if (!world) return [];
-    const blacklist = world.blacklist || [];
     const q = query.toLowerCase();
 
-    return blacklist.filter((b) => {
-      const matchesSearch =
+    return world.blacklist.filter((b) => {
+      return (
         !q ||
         b.name.toLowerCase().includes(q) ||
         b.codename.toLowerCase().includes(q) ||
-        b.lastSeen.toLowerCase().includes(q);
-
-      const matchesThreat =
-        threatFilter === "All" ? true : b.threat === threatFilter;
-
-      return matchesSearch && matchesThreat;
+        b.threat.toLowerCase().includes(q)
+      );
     });
-  }, [world, query, threatFilter]);
-
-  if (!world) {
-    return (
-      <div className="w-full h-full p-6">
-        <p>Loading blacklist registry…</p>
-      </div>
-    );
-  }
+  }, [world, query]);
 
   return (
-    <div className="w-full h-full p-6 overflow-auto">
-      <h1 className="text-xl mb-4">Blacklist Registry</h1>
-      <p className="text-sm mb-4">
-        Fictional high-threat registry powered only by synthetic data. No real identities.
-      </p>
+    <DirectoryLayout title="Blacklist Registry">
+      <div className="sd-panel sd-panel-wide sd-panel-danger">
+        <div className="sd-panel-header">
+          <h2 className="heading-danger">Excommunicado Index</h2>
+          <span className="sd-muted">
+            Clearance Level: FULL
+          </span>
+        </div>
 
-      <div className="mb-4 flex gap-4 flex-wrap">
-        <input
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search by name, codename, or last seen…"
-          className="px-3 py-2 flex-1 min-w-[200px]"
-        />
+        <div className="sd-search-row">
+          <input
+            type="text"
+            placeholder="Search by name, codename, threat…"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+        </div>
 
-        <select
-          value={threatFilter}
-          onChange={(e) => setThreatFilter(e.target.value)}
-          className="px-3 py-2"
-        >
-          {threats.map((t) => (
-            <option key={t} value={t}>
-              {t}
-            </option>
+        <ul className="sd-list">
+          {entries.map((b) => (
+            <li key={b.id} className="sd-list-row">
+              <div className="sd-strong">{b.name}</div>
+              <div className="sd-meta">
+                Codename: {b.codename}
+              </div>
+              <div className="sd-tag sd-tag-danger">
+                Threat: {b.threat}
+              </div>
+              <div className="sd-meta">
+                Last Seen: {b.lastSeen}
+              </div>
+            </li>
           ))}
-        </select>
+        </ul>
+
+        {entries.length === 0 && (
+          <p className="sd-muted">No flagged entities found.</p>
+        )}
       </div>
-
-      <table className="w-full text-left text-sm">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Codename</th>
-            <th>Threat</th>
-            <th>Last Seen</th>
-            <th>Background</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filtered.map((b) => (
-            <tr key={b.id}>
-              <td>{b.name}</td>
-              <td>{b.codename}</td>
-              <td>{b.threat}</td>
-              <td>{b.lastSeen}</td>
-              <td>{b.background}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      {filtered.length === 0 && (
-        <p className="mt-4 text-sm opacity-70">
-          No entries match your current filters.
-        </p>
-      )}
-    </div>
+    </DirectoryLayout>
   );
 }

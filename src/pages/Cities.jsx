@@ -1,58 +1,103 @@
 import React, { useEffect, useState } from "react";
-import { faker } from "@faker-js/faker";
-
-function generateCities(count = 80) {
-  const levels = ["Cold", "Low", "Active", "Hot", "Critical"];
-  const cities = [];
-  for (let i = 0; i < count; i++) {
-    cities.push({
-      id: "CITY-" + (i + 1),
-      name: faker.location.city(),
-      country: faker.location.country(),
-      activity: faker.helpers.arrayElement(levels),
-      operators: faker.number.int({ min: 0, max: 25 }),
-      missions: faker.number.int({ min: 0, max: 40 }),
-    });
-  }
-  return cities;
-}
+import DirectoryLayout from "../components/DirectoryLayout";
+import SafePage from "../components/SafePage";
+import { generateAgents } from "../utils/generator";
+import { resolveCity } from "../utils/cityResolver";
 
 export default function Cities() {
-  const [cities, setCities] = useState([]);
+  const [query, setQuery] = useState("");
+  const [agents, setAgents] = useState([]);
+  const [city, setCity] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  useEffect(() => {
-    setCities(generateCities(120));
-  }, []);
+  async function runSearch() {
+    setError("");
+    setLoading(true);
+    setAgents([]);
+    setCity(null);
+
+    try {
+      const resolved = await resolveCity(query);
+
+      if (!resolved) {
+        setError("City not found in High Table records.");
+        setLoading(false);
+        return;
+      }
+
+      setCity(resolved);
+
+      const generated = await generateAgents(resolved.name, 12);
+      setAgents(generated);
+      setLoading(false);
+    } catch (err) {
+      console.error(err);
+      setError("Search failed.");
+      setLoading(false);
+    }
+  }
 
   return (
-    <div className="w-full h-full p-6 overflow-auto">
-      <h1 className="text-xl mb-4">Cities Activity</h1>
-      <p className="text-sm mb-4">
-        Synthetic world heat overview. Activity levels, operators and missions are all fictional.
-      </p>
+    <DirectoryLayout title="Cities Intelligence">
+      <SafePage loading={false}>
+        {/* SEARCH */}
+        <div className="sd-panel sd-panel-wide">
+          <div className="sd-search-row">
+            <input
+              placeholder="Enter city name (e.g. London, Tokyo, Rome)"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
+            <button className="sd-btn" onClick={runSearch}>
+              Scan
+            </button>
+          </div>
 
-      <table className="w-full text-left text-sm">
-        <thead>
-          <tr>
-            <th>City</th>
-            <th>Country</th>
-            <th>Activity</th>
-            <th>Operators</th>
-            <th>Missions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {cities.map((c) => (
-            <tr key={c.id}>
-              <td>{c.name}</td>
-              <td>{c.country}</td>
-              <td>{c.activity}</td>
-              <td>{c.operators}</td>
-              <td>{c.missions}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          {error && <div className="sd-muted">{error}</div>}
+        </div>
+
+        {/* MAP + AGENTS */}
+        <SafePage loading={loading}>
+          {city && (
+            <div className="sd-panel sd-panel-map">
+              <div className="sd-map-grid">
+                {/* MAP PLACEHOLDER (safe – no Leaflet crash) */}
+                <div className="sd-map-shell">
+                  <div className="sd-map">
+                    <div className="sd-map-overlay">
+                      {city.name}, {city.country}
+                    </div>
+                  </div>
+                </div>
+
+                {/* AGENTS */}
+                <div className="sd-agents-list">
+                  <h3>Active Agents</h3>
+
+                  {agents.map((a, i) => (
+                    <div key={i} className="sd-agent">
+                      <div className="sd-strong">{a.fullName}</div>
+                      <div className="meta">
+                        {a.codename} • {a.profession}
+                      </div>
+                      <div className="risk">
+                        {a.city}, {a.nationality}
+                      </div>
+                    </div>
+                  ))}
+
+                  {agents.length === 0 && (
+                    <div className="sd-hint">
+                      No agents detected in this sector.
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+        </SafePage>
+      </SafePage>
+    </DirectoryLayout>
   );
 }

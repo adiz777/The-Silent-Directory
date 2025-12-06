@@ -1,153 +1,130 @@
 import { faker } from "@faker-js/faker";
+import { resolveCity } from "./cityResolver";
 
-// Helper arrays
-const specialties = [
-  "Close Protection",
-  "Asset Recovery",
-  "Covert Transport",
-  "Information Laundering",
-  "Counter-Surveillance",
-  "Cyber Reconnaissance",
-  "Forensic Accounting",
-  "Arms Brokering",
-  "Extraction Planning",
-  "Operational Logistics",
-];
+/* ============================
+   ✅ AGENTS (CITIES / MAP)
+============================ */
 
-const risks = ["Low", "Moderate", "High", "Severe", "Unknown"];
+export async function generateAgents(query, count = 10) {
+  const city = await resolveCity(query);
 
-const weaponTypes = ["Handgun", "Sniper", "Rifle", "Shotgun", "SMG", "Melee", "Exotic"];
-const weaponRarity = ["Common", "Uncommon", "Rare", "Legendary", "Prototype"];
+  const baseLat = city?.lat ?? faker.number.float({ min: 20, max: 60 });
+  const baseLng = city?.lng ?? faker.number.float({ min: -20, max: 80 });
 
-const missionTypes = ["Extraction", "Recon", "Erasure", "Retrieval", "Pursuit"];
-const difficulties = ["Low", "Medium", "High", "Extreme"];
-const priorities = ["Routine", "Time-Sensitive", "Urgent", "Non-Negotiable"];
-
-const threatLevels = ["Level 1", "Level 2", "Level 3", "Level 4", "Level 5"];
-
-// ---- Dossiers ----
-function generateDossier(id) {
-  const firstName = faker.person.firstName();
-  const lastName = faker.person.lastName();
-  const city = faker.location.city();
-  const country = faker.location.country();
-
-  return {
-    id: `DOS-${id}`,
-    name: `${firstName} ${lastName}`,
-    codename: faker.word.adjective().toUpperCase() + " " + faker.animal.type().toUpperCase(),
-    specialty: faker.helpers.arrayElement(specialties),
-    risk: faker.helpers.arrayElement(risks),
-    notes: faker.lorem.sentence(),
-    city,
-    nationality: country,
-  };
+  return Array.from({ length: count }, () => ({
+    fullName: faker.person.fullName(),
+    codename:
+      faker.word.adjective().toUpperCase() +
+      " " +
+      faker.animal.type().toUpperCase(),
+    profession: faker.person.jobTitle(),
+    city: city?.name || query || "Unknown",
+    nationality: city?.country || faker.location.countryCode("alpha-2"),
+    agency: faker.company.name(),
+    lat: baseLat + (Math.random() - 0.5) * 0.12,
+    lng: baseLng + (Math.random() - 0.5) * 0.12,
+  }));
 }
 
-// ---- Weapons ----
-function generateWeapon(id) {
-  return {
-    id: `WPN-${id}`,
+/* ============================
+   ✅ CONTINENTALS (HOTELS)
+============================ */
+
+export function generateContinentals(count = 200) {
+  return Array.from({ length: count }, (_, i) => ({
+    id: `CON-${i + 1}`,
+    name: `The Continental ${faker.location.city()}`,
+    city: faker.location.city(),
+    manager: faker.person.fullName(),
+    rating: faker.number.int({ min: 3, max: 5 }),
+    roomsAvailable: faker.number.int({ min: 12, max: 240 }),
+    status: faker.helpers.arrayElement([
+      "Operational",
+      "Under Observation",
+      "Restricted",
+    ]),
+  }));
+}
+
+/* ============================
+   ✅ WORLD SNAPSHOT (DASHBOARD)
+============================ */
+
+export function generateAll() {
+  const dossiers = Array.from({ length: 200 }, (_, i) => ({
+    id: `DOS-${i + 1}`,
+    name: faker.person.fullName(),
+    codename:
+      faker.word.adjective().toUpperCase() +
+      " " +
+      faker.animal.type().toUpperCase(),
+    specialty: faker.person.jobTitle(),
+    risk: faker.helpers.arrayElement([
+      "Low",
+      "Moderate",
+      "High",
+      "Severe",
+    ]),
+    notes: faker.lorem.sentence(),
+    city: faker.location.city(),
+    nationality: faker.location.countryCode("alpha-2"),
+  }));
+
+  const missions = Array.from({ length: 150 }, (_, i) => ({
+    id: `MIS-${i + 1}`,
+    type: faker.helpers.arrayElement([
+      "Extraction",
+      "Recon",
+      "Erasure",
+      "Retrieval",
+    ]),
+    difficulty: faker.helpers.arrayElement([
+      "Low",
+      "Medium",
+      "High",
+      "Extreme",
+    ]),
+    priority: faker.helpers.arrayElement([
+      "Routine",
+      "Urgent",
+      "Non-Negotiable",
+    ]),
+    location: faker.location.city(),
+    target: faker.person.fullName(),
+    reward: `${faker.number.int({ min: 5, max: 500 })} coins`,
+    window: faker.date.soon().toISOString(),
+  }));
+
+  const weapons = Array.from({ length: 200 }, (_, i) => ({
+    id: `WPN-${i + 1}`,
     name: faker.commerce.productName(),
-    type: faker.helpers.arrayElement(weaponTypes),
-    caliber: faker.helpers.arrayElement(["9mm", "5.56", "7.62", ".45 ACP", "12g", "Unknown"]),
+    type: faker.helpers.arrayElement([
+      "Handgun",
+      "Rifle",
+      "Sniper",
+      "Shotgun",
+    ]),
     origin: faker.location.country(),
-    weight: faker.number.float({ min: 0.5, max: 10, precision: 0.1 }) + " kg",
-    rarity: faker.helpers.arrayElement(weaponRarity),
-    useCase: faker.helpers.arrayElement([
-      "Close quarters",
-      "Long-range precision",
-      "Crowd control",
-      "Silent operation",
-      "Ritual contract",
+    rarity: faker.helpers.arrayElement([
+      "Common",
+      "Rare",
+      "Legendary",
     ]),
     serial: faker.string.alphanumeric(10).toUpperCase(),
-  };
-}
+  }));
 
-// ---- Missions ----
-function generateMission(id) {
-  const location = `${faker.location.city()}, ${faker.location.country()}`;
-  const deadline = faker.date.soon({ days: 14 });
-
-  return {
-    id: `MIS-${id}`,
-    type: faker.helpers.arrayElement(missionTypes),
-    difficulty: faker.helpers.arrayElement(difficulties),
-    priority: faker.helpers.arrayElement(priorities),
-    location,
-    target: faker.person.fullName(),
-    reward: faker.finance.amount({ min: 5000, max: 500000, dec: 0 }) + " coins",
-    window: deadline.toISOString(),
-  };
-}
-
-// ---- Blacklist ----
-function generateBlacklistEntry(id) {
-  return {
-    id: `BLK-${id}`,
+  const blacklist = Array.from({ length: 120 }, (_, i) => ({
+    id: `BLK-${i + 1}`,
     name: faker.person.fullName(),
-    codename: faker.hacker.noun().toUpperCase() + "-" + faker.number.int({ min: 10, max: 99 }),
-    threat: faker.helpers.arrayElement(threatLevels),
-    lastSeen: `${faker.location.city()}, ${faker.location.country()}`,
+    codename: faker.word.adjective().toUpperCase(),
+    threat: faker.helpers.arrayElement([
+      "Level 1",
+      "Level 3",
+      "Level 5",
+    ]),
+    lastSeen: faker.location.city(),
     background: faker.lorem.sentence(),
-  };
-}
+  }));
 
-// ---- Agents (generateAgents) ----
-export async function generateAgents(query, count = 10) {
-  const city = query || faker.location.city();
-  const country = faker.location.country();
-
-  const agents = [];
-  for (let i = 0; i < count; i++) {
-    agents.push({
-      fullName: faker.person.fullName(),
-      codename: faker.word.adjective().toUpperCase() + " " + faker.animal.type().toUpperCase(),
-      profession: faker.person.jobTitle(),
-      nationality: country,
-      city,
-      address: faker.location.streetAddress({ useFullAddress: true }),
-      email: faker.internet.email(),
-      phone: faker.phone.number(),
-      agency: faker.company.name(),
-      lat: faker.location.latitude(),
-      lng: faker.location.longitude(),
-    });
-  }
-
-  return agents;
-}
-
-// ---- Continentals (200 hotels) ----
-export function generateContinentals(count = 200) {
-  const hotels = [];
-  for (let i = 0; i < count; i++) {
-    hotels.push({
-      id: `CON-${i + 1}`,
-      name: "The Continental " + faker.location.city(),
-      city: faker.location.city(),
-      manager: faker.person.fullName(),
-      rating: faker.number.int({ min: 3, max: 5 }),
-      roomsAvailable: faker.number.int({ min: 10, max: 200 }),
-    });
-  }
-  return hotels;
-}
-
-// ---- Main world snapshot (generateAll) ----
-export function generateAll() {
-  const dossiers = Array.from({ length: 200 }, (_, i) => generateDossier(i + 1));
-  const missions = Array.from({ length: 150 }, (_, i) => generateMission(i + 1));
-  const weapons = Array.from({ length: 200 }, (_, i) => generateWeapon(i + 1));
-  const blacklist = Array.from({ length: 120 }, (_, i) =>
-    generateBlacklistEntry(i + 1)
-  );
-
-  return {
-    dossiers,
-    missions,
-    weapons,
-    blacklist,
-  };
+  return { dossiers, missions, weapons, blacklist };
 }

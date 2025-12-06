@@ -1,3 +1,4 @@
+// src/pages/Landing.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -66,19 +67,23 @@ export default function Landing() {
   }, [navigate]);
 
   return (
-    <div className="w-full h-full flex items-center justify-center p-6" data-theme={theme}>
-      <div className="w-full max-w-2xl text-center">
-        <h1 className="text-xl mb-6">{quote}</h1>
-        <div className="text-left mb-6">
+    <div className="landing-root" data-theme={theme}>
+      <div className="landing-terminal">
+        <h1 className="landing-quote">{quote}</h1>
+
+        <div className="boot-log">
           {BOOT_LINES.slice(0, bootIndex).map((line, i) => (
-            <p key={i}>{line}</p>
+            <p key={i} className="boot-line">
+              {">"} {line}
+            </p>
           ))}
         </div>
-        {!finished && (
-          <button onClick={() => navigate("/login")} className="px-4 py-2">
-            Skip Intro
-          </button>
-        )}
+
+
+
+        <div className="high-table-watermark">
+          HIGH TABLE · ISSUED AUTHORITY
+        </div>
       </div>
     </div>
   );
