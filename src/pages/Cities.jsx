@@ -1,103 +1,189 @@
 import React, { useEffect, useState } from "react";
 import DirectoryLayout from "../components/DirectoryLayout";
-import SafePage from "../components/SafePage";
-import { generateAgents } from "../utils/generator";
+import { MapContainer, TileLayer, Circle, Marker, Popup } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+
+import { generateAgents, generateContinentals } from "../utils/generator";
 import { resolveCity } from "../utils/cityResolver";
 
 export default function Cities() {
   const [query, setQuery] = useState("");
-  const [agents, setAgents] = useState([]);
   const [city, setCity] = useState(null);
+  const [agents, setAgents] = useState([]);
+  const [hotels, setHotels] = useState([]);
+  const [selectedHotel, setSelectedHotel] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
-  async function runSearch() {
-    setError("");
+  async function searchCity() {
+    if (!query) return;
     setLoading(true);
-    setAgents([]);
-    setCity(null);
 
-    try {
-      const resolved = await resolveCity(query);
-
-      if (!resolved) {
-        setError("City not found in High Table records.");
-        setLoading(false);
-        return;
-      }
-
-      setCity(resolved);
-
-      const generated = await generateAgents(resolved.name, 12);
-      setAgents(generated);
+    const resolved = await resolveCity(query);
+    if (!resolved) {
       setLoading(false);
-    } catch (err) {
-      console.error(err);
-      setError("Search failed.");
-      setLoading(false);
+      return;
     }
+
+    setCity(resolved);
+    setAgents(await generateAgents(resolved.name, 12));
+    setHotels(generateContinentals(10));
+    setSelectedHotel(null);
+
+    setLoading(false);
+  }
+
+  function onMapClick(e) {
+    if (!city) return;
+
+    generateAgents(city.name, 8).then((a) => {
+      setAgents(a.map(agent => ({
+        ...agent,
+        lat: e.latlng.lat + (Math.random() - 0.5) * 0.1,
+        lng: e.latlng.lng + (Math.random() - 0.5) * 0.1,
+      })));
+    });
   }
 
   return (
     <DirectoryLayout title="Cities Intelligence">
-      <SafePage loading={false}>
-        {/* SEARCH */}
-        <div className="sd-panel sd-panel-wide">
-          <div className="sd-search-row">
-            <input
-              placeholder="Enter city name (e.g. London, Tokyo, Rome)"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-            />
-            <button className="sd-btn" onClick={runSearch}>
-              Scan
-            </button>
-          </div>
-
-          {error && <div className="sd-muted">{error}</div>}
+      {/* SEARCH */}
+      <div className="sd-panel sd-panel-wide">
+        <div className="sd-city-search">
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Enter city or keyword…"
+          />
+          <button onClick={searchCity} disabled={loading}>
+            {loading ? "Locating…" : "Locate"}
+          </button>
         </div>
 
-        {/* MAP + AGENTS */}
-        <SafePage loading={loading}>
-          {city && (
-            <div className="sd-panel sd-panel-map">
-              <div className="sd-map-grid">
-                {/* MAP PLACEHOLDER (safe – no Leaflet crash) */}
-                <div className="sd-map-shell">
-                  <div className="sd-map">
-                    <div className="sd-map-overlay">
-                      {city.name}, {city.country}
-                    </div>
-                  </div>
-                </div>
+        {city && (
+          <div className="sd-muted">
+            Resolved: {city.name}, {city.country} — Population {city.pop}
+          </div>
+        )}
+      </div>
+
+      {/* MAP + AGENTS */}
+      {city && (
+        <div className="sd-panel sd-panel-wide">
+          <div className="sd-map-grid">
+            {/* MAP */}
+            <div className="sd-map-shell">
+              <MapContainer
+                center={[city.lat, city.lng]}
+                zoom={10}
+                scrollWheelZoom
+                className="sd-map"
+                whenReady={(map) =>
+                  map.target.on("click", onMapClick)
+                }
+              >
+                <TileLayer
+                  url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+                />
+
+                {/* CITY GLOW */}
+                <Circle
+                  center={[city.lat, city.lng]}
+                  radius={35000}
+                  pathOptions={{
+                    color: "var(--accent)",
+                    fillColor: "var(--accent)",
+                    fillOpacity: 0.15,
+                  }}
+                />
 
                 {/* AGENTS */}
-                <div className="sd-agents-list">
-                  <h3>Active Agents</h3>
+                {agents.map((a, i) => (
+                  <Marker key={i} position={[a.lat, a.lng]}>
+                    <Popup>
+                      <strong>{a.codename}</strong><br />
+                      {a.profession}<br />
+                      {a.agency}
+                    </Popup>
+                  </Marker>
+                ))}
 
-                  {agents.map((a, i) => (
-                    <div key={i} className="sd-agent">
-                      <div className="sd-strong">{a.fullName}</div>
-                      <div className="meta">
-                        {a.codename} • {a.profession}
-                      </div>
-                      <div className="risk">
-                        {a.city}, {a.nationality}
-                      </div>
-                    </div>
-                  ))}
+                {/* CONTINENTALS */}
+                {hotels.map((h) => (
+                  <Circle
+                    key={h.id}
+                    center={[h.lat, h.lng]}
+                    radius={18000}
+                    eventHandlers={{
+                      click: () => setSelectedHotel(h),
+                    }}
+                    pathOptions={{
+                      color: "#d4af37",
+                      fillColor: "#d4af37",
+                      fillOpacity: 0.25,
+                    }}
+                  />
+                ))}
+              </MapContainer>
 
-                  {agents.length === 0 && (
-                    <div className="sd-hint">
-                      No agents detected in this sector.
-                    </div>
-                  )}
-                </div>
+              <div className="sd-map-overlay">
+                Click map → generate agents
               </div>
             </div>
-          )}
-        </SafePage>
-      </SafePage>
+
+            {/* AGENT LIST */}
+            <div className="sd-agents">
+              <h3>Active Agents</h3>
+
+              {agents.length === 0 && (
+                <div className="sd-hint">
+                  No agents deployed.
+                </div>
+              )}
+
+              {agents.map((a, i) => (
+                <div key={i} className="sd-agent">
+                  <strong>{a.fullName}</strong>
+                  <div className="meta">{a.codename}</div>
+                  <div className="meta">{a.agency}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* CONTINENTAL BOOKING */}
+      {selectedHotel && (
+        <div className="sd-panel sd-panel-wide">
+          <div className="sd-slip">
+            <h2>{selectedHotel.name}</h2>
+
+            <div className="sd-meta">
+              City: {selectedHotel.city}<br />
+              Manager: {selectedHotel.manager}<br />
+              Rating: {selectedHotel.rating} ★<br />
+              Rooms Available: {selectedHotel.roomsAvailable}
+            </div>
+
+            <div className="sd-coin">
+              PAYMENT REQUIRED: 1 CONTINENTAL COIN
+            </div>
+
+            <button
+              className="sd-btn"
+              disabled={document.body.classList.contains("excommunicado")}
+            >
+              Book Sanctuary
+            </button>
+
+            {document.body.classList.contains("excommunicado") && (
+              <div className="sd-hint">
+                Access denied — Excommunicado.
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </DirectoryLayout>
   );
 }

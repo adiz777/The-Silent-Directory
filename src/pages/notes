@@ -1,315 +1,150 @@
-// src/pages/Dashboard.jsx
-import React, { useEffect, useRef, useState } from "react";
-import { useWorld } from "../context/WorldContext";
-import { generateAll, generateAgents } from "../utils/generator";
+import React, { useEffect, useState } from "react";
 import DirectoryLayout from "../components/DirectoryLayout";
+import { generateAll } from "../utils/generator";
 
-import "leaflet/dist/leaflet.css";
-import * as L from "leaflet";
-
-if (typeof window !== "undefined") {
-  // expose Leaflet globally for plugins
-  window.L = window.L || L;
-  import("leaflet.heat").catch((e) => {
-    // non-fatal: app still works without heat layer
-    console.warn("Failed to load leaflet.heat plugin:", e);
-  });
-}
-
-export default function Dashboard() {
-  const { theme } = useWorld();
-
-  const [world, setWorld] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  // city / keyword → agents
-  const [query, setQuery] = useState("");
-  const [agents, setAgents] = useState([]);
-  const [searchLoading, setSearchLoading] = useState(false);
-
-  // map refs
-  const mapContainerRef = useRef(null);
-  const mapRef = useRef(null);
-  const heatLayerRef = useRef(null);
-
-  // initial world snapshot (dossiers, missions, weapons, blacklist)
-  useEffect(() => {
-    const snapshot = generateAll();
-    setWorld(snapshot);
-    setLoading(false);
-  }, []);
-
-  // initialise map once
-  useEffect(() => {
-    if (!mapContainerRef.current) return;
-    if (mapRef.current) return; // already created
-    if (typeof window === "undefined" || !window.L) return;
-
-    const Lglobal = window.L;
-
-    const map = Lglobal.map(mapContainerRef.current, {
-      zoomControl: false,
-      attributionControl: false,
-    }).setView([20, 0], 2);
-
-    Lglobal.tileLayer(
-      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-      {
-        maxZoom: 5,
-        opacity: 0.35,
-      }
-    ).addTo(map);
-
-    mapRef.current = map;
-  }, []);
-
-  // whenever agents change, update heat layer
-  useEffect(() => {
-    if (!mapRef.current || typeof window === "undefined") return;
-    const Lglobal = window.L;
-    if (!Lglobal || !Lglobal.heatLayer) return;
-
-    const points = agents
-      .filter((a) => a.lat && a.lng)
-      .map((a) => [Number(a.lat), Number(a.lng), 0.6]); // [lat, lng, intensity]
-
-    if (heatLayerRef.current) {
-      heatLayerRef.current.setLatLngs(points);
-    } else if (points.length) {
-      heatLayerRef.current = Lglobal
-        .heatLayer(points, { radius: 20, blur: 15 })
-        .addTo(mapRef.current);
-    }
-  }, [agents]);
-
-  async function handleSearch(e) {
-    e.preventDefault();
-    if (!query.trim()) return;
-    setSearchLoading(true);
-    try {
-      const result = await generateAgents(query.trim(), 25);
-      setAgents(result);
-
-      // center map roughly around first agent, if we have coords
-      if (result.length && mapRef.current) {
-        const first = result[0];
-        if (first.lat && first.lng) {
-          mapRef.current.setView(
-            [Number(first.lat), Number(first.lng)],
-            4
-          );
-        }
-      }
-    } finally {
-      setSearchLoading(false);
-    }
+/* ================================
+   STATIC COUNCIL FEED (Authoritative)
+================================ */
+const COUNCIL_FEED = [
+  {
+    title: "Elder Chamber",
+    body: "Voting conclave concluded — silence remains."
+  },
+  {
+    title: "Financial Circle",
+    body: "Coin circulation normalized after Rome incident."
+  },
+  {
+    title: "Judicator Office",
+    body: "Field judgments delegated. No appeals accepted."
+  },
+  {
+    title: "Archivists",
+    body: "Classified retrieval requests increased by 23%."
   }
+];
 
-  if (loading || !world) {
-    return (
-      <DirectoryLayout title="Operator Dashboard">
-        <section className="sd-panel sd-panel-wide">
-          <p className="sd-muted">Booting world engines…</p>
-        </section>
-      </DirectoryLayout>
-    );
-  }
+export default function HighTable() {
+  const [excommunicado, setExcommunicado] = useState(false);
+  const [orders, setOrders] = useState([]);
 
-  const highlightColor =
-    theme === "high-table-crimson"
-      ? "var(--accent-red)"
-      : theme === "shadow-blue"
-      ? "var(--accent-cyan)"
-      : "var(--accent-gold)";
+  /* ================================
+     EXCOMMUNICADO MODE
+  ================================ */
+  useEffect(() => {
+    document.body.classList.toggle("excommunicado", excommunicado);
+  }, [excommunicado]);
+
+  /* ================================
+     GENERATE HIGH TABLE ORDERS
+  ================================ */
+  useEffect(() => {
+    const world = generateAll();
+
+    const generated = world.missions.slice(0, 10).map((m, i) => ({
+      id: `HT-${i}`,
+      title: `Directive ${i + 1}`,
+      classification: classify(m),
+      location: m.location,
+      target: m.target,
+      reward: m.reward,
+      summary: `Authorization granted for ${m.type.toLowerCase()} under High Table mandate.`
+    }));
+
+    setOrders(generated);
+  }, []);
 
   return (
-    <DirectoryLayout title="Operator Dashboard">
-      {/* LEFT COLUMN: dossiers + missions */}
-      <section className="sd-panel sd-panel-wide">
-        <header className="sd-panel-header">
-          <div>
-            <h2>Classified Profiles</h2>
-            <p className="sd-muted">
-              Synthetic dossiers for cinematic reference. No real data.
-            </p>
-          </div>
-          <span className="sd-pill">
-            {world.dossiers.length} dossiers
-          </span>
-        </header>
-
-        <ul className="sd-list">
-          {world.dossiers.slice(0, 8).map((d) => (
-            <li key={d.id} className="sd-list-row">
-              <span className="sd-strong">
-                {d.name}{" "}
-                <span className="sd-faint">— {d.specialty}</span>
-              </span>
-              <span className="sd-tag">{d.codename}</span>
-              <span className="sd-meta">
-                Risk: <strong>{d.risk}</strong>
-              </span>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section className="sd-panel sd-panel-wide">
-        <header className="sd-panel-header">
-          <div>
-            <h2>Mission Board</h2>
-            <p className="sd-muted">
-              Fictional contracts: extraction, recon, erasure, retrieval.
-            </p>
-          </div>
-          <span className="sd-pill">
-            {world.missions.length} contracts
-          </span>
-        </header>
-
-        <ul className="sd-list">
-          {world.missions.slice(0, 8).map((m) => (
-            <li key={m.id} className="sd-list-row">
-              <span className="sd-strong">
-                {m.type} —{" "}
-                <span className="sd-faint">{m.location}</span>
-              </span>
-              <span className="sd-tag sd-tag-warning">
-                {m.difficulty}
-              </span>
-              <span className="sd-meta">{m.reward}</span>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      {/* RIGHT COLUMN TOP: weapons + blacklist */}
-      <section className="sd-panel">
-        <header className="sd-panel-header">
-          <div>
-            <h2>Weapons Registry</h2>
-            <p className="sd-muted">
-              Synthetic arsenal, categorized by type, origin and rarity.
-            </p>
-          </div>
-          <span className="sd-pill">
-            {world.weapons.length} entries
-          </span>
-        </header>
-
-        <ul className="sd-list">
-          {world.weapons.slice(0, 6).map((w) => (
-            <li key={w.id} className="sd-list-row">
-              <span className="sd-strong">
-                {w.name}{" "}
-                <span className="sd-faint">— {w.type}</span>
-              </span>
-              <span className="sd-meta">
-                {w.caliber} • {w.origin}
-              </span>
-              <span className="sd-tag">{w.rarity}</span>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section className="sd-panel sd-panel-danger">
-        <header className="sd-panel-header">
-          <div>
-            <h2>Blacklist Registry</h2>
-            <p className="sd-muted">
-              High-threat synthetic entities flagged for visual purposes.
-            </p>
-          </div>
-          <span className="sd-pill">
-            {world.blacklist.length} flagged
-          </span>
-        </header>
-
-        <ul className="sd-list">
-          {world.blacklist.slice(0, 6).map((b) => (
-            <li key={b.id} className="sd-list-row">
-              <span className="sd-strong">
-                {b.name}{" "}
-                <span className="sd-faint">— {b.codename}</span>
-              </span>
-              <span className="sd-tag sd-tag-danger">
-                {b.threat}
-              </span>
-              <span className="sd-meta">{b.lastSeen}</span>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      {/* BOTTOM RIGHT: city search + agents + map */}
-      <section className="sd-panel sd-panel-map">
-        <header className="sd-panel-header">
-          <div>
-            <h2>Live Agents Lookup</h2>
-            <p className="sd-muted">
-              Type any city or keyword. We synthesize operators + a world
-              heatmap. Nothing here is real.
-            </p>
-          </div>
-        </header>
-
-        <form className="sd-search-row" onSubmit={handleSearch}>
-          <input
-            type="text"
-            placeholder="Search by city, region, or keyword…"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-          />
-          <button
-            type="submit"
-            disabled={searchLoading || !query.trim()}
-          >
-            {searchLoading ? "Resolving…" : "Run Query"}
-          </button>
-        </form>
-
-        <div className="sd-map-grid">
-          <div className="sd-map-shell">
-            <div
-              ref={mapContainerRef}
-              className="sd-map"
-              style={{
-                borderColor: highlightColor,
-              }}
-            />
-            <div className="sd-map-overlay">
-              WORLD ENGINE // HEATMAP
-            </div>
-          </div>
-
-          <div className="sd-agents-list">
-            {agents.length === 0 ? (
-              <p className="sd-muted">
-                No active query. Run a search to populate agents on the
-                map.
-              </p>
-            ) : (
-              <ul className="sd-list sd-list-tight">
-                {agents.slice(0, 12).map((a, idx) => (
-                  <li key={idx} className="sd-list-row">
-                    <span className="sd-strong">
-                      {a.fullName}{" "}
-                      <span className="sd-faint">— {a.codename}</span>
-                    </span>
-                    <span className="sd-meta">
-                      {a.profession}
-                      {" · "}
-                      {a.city}, {a.nationality}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
+    <DirectoryLayout title="High Table Console">
+      {/* ================== STATUS ================== */}
+      <div className="sd-panel sd-panel-wide sd-panel-danger">
+        <div className="sd-panel-header">
+          <h2>Authority Status</h2>
+          <span className="sd-pill sd-tag-danger">ABSOLUTE</span>
         </div>
-      </section>
+
+        <p className="sd-muted">
+          This console reflects binding decisions issued by the High Table.
+          All access is logged. Dissent is terminal.
+        </p>
+
+        <button
+          className={`sd-btn ${excommunicado ? "danger" : ""}`}
+          onClick={() => setExcommunicado(v => !v)}
+          style={{ marginTop: "12px" }}
+        >
+          {excommunicado ? "Revoke Excommunicado" : "Declare Excommunicado"}
+        </button>
+      </div>
+
+      {/* ================== ORDERS ================== */}
+      <div className="sd-panel sd-panel-wide">
+        <div className="sd-panel-header">
+          <h2>High Table Directives</h2>
+          <span className="sd-pill">{orders.length} Active</span>
+        </div>
+
+        <ul className="sd-list">
+          {orders.map(o => (
+            <li key={o.id} className="sd-list-row">
+              <div className="sd-panel-header">
+                <span className="sd-strong">{o.title}</span>
+                <span className={`sd-tag ${tagClass(o.classification)}`}>
+                  {o.classification}
+                </span>
+              </div>
+
+              <div className="sd-meta">
+                Target: {o.target}<br />
+                Location: {o.location}<br />
+                Reward: {o.reward}
+              </div>
+
+              <div className="sd-faint">{o.summary}</div>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* ================== COUNCIL FEED ================== */}
+      <div className="sd-panel sd-panel-danger">
+        <div className="sd-panel-header">
+          <h2>Council Surveillance</h2>
+          <span className="sd-tag sd-tag-danger">LIVE</span>
+        </div>
+
+        <ul className="sd-list sd-list-tight">
+          {COUNCIL_FEED.map((c, i) => (
+            <li key={i} className="sd-list-row">
+              <span className="sd-strong">{c.title}</span>
+              <span className="sd-meta">{c.body}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* ================== WARNING ================== */}
+      <div className="sd-panel sd-panel-wide">
+        <p className="sd-muted">
+          “Consequences are the foundation of order. Without them, rules are meaningless.”
+        </p>
+      </div>
     </DirectoryLayout>
   );
 }
-  
+
+/* ================================
+   HELPERS
+================================ */
+
+function classify(mission) {
+  if (mission.priority === "Non-Negotiable") return "EXCOMMUNICADO";
+  if (mission.priority === "Urgent") return "RESTRICTED";
+  return "STANDARD";
+}
+
+function tagClass(level) {
+  if (level === "EXCOMMUNICADO") return "sd-tag-danger";
+  if (level === "RESTRICTED") return "sd-tag-warning";
+  return "";
+}
