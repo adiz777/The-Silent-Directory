@@ -1,81 +1,64 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import DirectoryLayout from "../components/DirectoryLayout";
 import { generateAll } from "../utils/generator";
 
 export default function Profiles() {
-  const [world, setWorld] = useState(null);
-  const [query, setQuery] = useState("");
-  const [active, setActive] = useState(null);
+  const [dossiers, setDossiers] = useState([]);
 
   useEffect(() => {
-    setWorld(generateAll());
+    const world = generateAll();
+    setDossiers(world.dossiers);
   }, []);
-
-  const dossiers = useMemo(() => {
-    if (!world) return [];
-    const q = query.toLowerCase();
-    return world.dossiers.filter(d =>
-      !q ||
-      d.name.toLowerCase().includes(q) ||
-      d.codename.toLowerCase().includes(q) ||
-      d.city.toLowerCase().includes(q)
-    );
-  }, [world, query]);
-
-  const downloadPDF = () => window.print();
-
-  if (!world) return null;
 
   return (
     <DirectoryLayout title="Classified Profiles">
-      {/* SEARCH */}
+      {/* INFO HEADER */}
       <div className="sd-panel sd-panel-wide">
-        <input
-          className="sd-search"
-          placeholder="Search by name, codename, or city…"
-          value={query}
-          onChange={e => setQuery(e.target.value)}
-        />
+        <div className="sd-panel-header">
+          <h2>Dossier Archive</h2>
+          <span className="sd-pill">{dossiers.length} Files</span>
+        </div>
+
+        <p className="sd-muted">
+          Synthetic operator dossiers generated for cinematic visualization.
+          No real identities. All access logged.
+        </p>
+
+        <button
+          className="sd-btn secondary"
+          onClick={() => window.print()}
+          style={{ marginTop: "12px" }}
+        >
+          Export / Print Dossiers
+        </button>
       </div>
 
-      {/* PROFILES GRID */}
-      <div className="sd-grid">
-        {dossiers.map(d => (
-          <div
-            key={d.id}
-            className={`sd-panel sd-card ${active === d.id ? "active" : ""}`}
-            onClick={() => setActive(active === d.id ? null : d.id)}
-          >
-            <div className="sd-panel-header">
-              <h2>{d.codename}</h2>
-              <span className={`sd-tag sd-tag-${d.risk.toLowerCase()}`}>
-                {d.risk}
-              </span>
-            </div>
-
-            <div className="sd-muted">
-              {d.name} • {d.city}, {d.nationality}
-            </div>
-
-            {/* EXPANDED DOSSIER */}
-            {active === d.id && (
-              <div className="sd-dossier">
-                <div className="sd-row">
-                  <strong>Specialty:</strong> {d.specialty}
-                </div>
-                <div className="sd-row">
-                  <strong>Notes:</strong> {d.notes}
-                </div>
-
-                <div className="sd-actions">
-                  <button className="sd-btn" onClick={downloadPDF}>
-                    Download Dossier
-                  </button>
-                </div>
+      {/* DOSSIER LIST */}
+      <div className="sd-panel sd-panel-wide">
+        <ul className="sd-list">
+          {dossiers.slice(0, 80).map((d) => (
+            <li key={d.id} className="sd-list-row">
+              <div className="sd-strong">
+                {d.name}
+                <span className="sd-tag" style={{ marginLeft: "10px" }}>
+                  {d.codename}
+                </span>
               </div>
-            )}
-          </div>
-        ))}
+
+              <div className="sd-meta">
+                Specialty: {d.specialty} • Risk Level: {d.risk}
+              </div>
+
+              <div className="sd-faint">
+                Location: {d.city}, {d.nationality}
+              </div>
+
+              <div className="sd-faint">
+                Notes: {d.notes}
+              </div>
+            </li>
+          ))}
+        </ul>
       </div>
     </DirectoryLayout>
   );
